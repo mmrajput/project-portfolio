@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kubernetes Multi-cluster Homelab</title>
+<title>Kubernetes Multi-cluster Platform</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;800&display=swap');
 
@@ -117,7 +117,7 @@ header {
 
 h1 {
   font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(36px, 6vw, 64px);
+  font-size: clamp(24px, 4vw, 42px);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -704,16 +704,21 @@ footer a:hover { text-decoration: underline; }
   <!-- HEADER -->
   <header>
     <a href="https://github.com/mmrajput/kubernetes-multi-cluster" target="_blank" rel="noopener" style="text-decoration:none;"><div class="header-badge">github.com/mmrajput/kubernetes-multi-cluster</div></a>
-    <h1>Kubernetes Multi-cluster Homelab</h1>
+    <h1>Kubernetes Multi-cluster Platform</h1>
     <p class="subtitle">Platform Engineering · Logical Architecture · Planned</p>
+    <div class="hw-bar">
+      <div class="hw-chip">Beelink SER5 Pro · <span>AMD Ryzen 5 5500U</span></div>
+      <div class="hw-chip"><span>32GB</span> RAM · <span>500GB</span> NVMe</div>
+      <div class="hw-chip">Proxmox VE 8.x · <span>Kubernetes v1.31</span></div>
+      <div class="hw-chip">kubeadm · <span>Calico CNI</span></div>
+    </div>
   </header>
 
       <div class="layer l-future" id="l9">
       <div class="layer-header" onclick="toggleLayer('l9')">
         <div class="layer-title-group">
           <div class="layer-dot" style="background:var(--future);opacity:0.5"></div>
-          <span class="layer-name" style="opacity:0.6">Next Project · Multi-Cluster Platform · Talos + vCluster + Cilium</span>
-          <span class="layer-phase">Physical Talos cluster · Management plane + 2 vClusters · Cilium CNI + Cluster Mesh</span>
+          <span class="layer-name" style="opacity:0.6">Multi-Cluster Platform · Talos + vCluster + Cilium + CNI + Cluster Mesh</span>
         </div>
         <span class="layer-toggle">▾</span>
       </div>
@@ -1076,7 +1081,7 @@ const modals = {
     layer: "Application Layer · Phase 10",
     title: "Nextcloud",
     color: "var(--app)",
-    desc: "Data sovereignty platform. Self-hosted cloud storage, calendar, contacts. DSGVO/Schrems II compliant — all data stays in the homelab. Full integration with Keycloak SSO.",
+    desc: "Data sovereignty platform. Self-hosted cloud storage, calendar, contacts. DSGVO/Schrems II compliant — all data stays locally. Full integration with Keycloak SSO.",
     detail: "Redis is architecturally mandatory for multi-replica Nextcloud (distributed locking), not optional. PostgreSQL via CNPG. Keycloak SSO via <code>user_oidc</code> app. Longhorn RWX PVC for file storage. Velero backup covers both the PVC and triggers CNPG backup for DB alignment. Coturn TURN server for Nextcloud Talk video conferencing.",
     tags: ["Deployment", "CNPG Cluster (Postgres)", "Redis (mandatory)", "PVC (Longhorn RWX)", "Ingress (nginx)", "Secret (via ESO)", "user_oidc app (Keycloak)"]
   },
@@ -1100,7 +1105,7 @@ const modals = {
     layer: "Application Layer · Phase 10",
     title: "Homepage Dashboard",
     color: "var(--app)",
-    desc: "Service overview dashboard showing status of all homelab services. Deployed via jameswynn Helm chart. Provides a single pane of glass for the homelab. Live at <a href=\"https://homepage.mmrajputhomelab.org/\" target=\"_blank\" rel=\"noopener\" style=\"color:var(--app)\">homepage.mmrajputhomelab.org</a>.",
+    desc: "Service overview dashboard showing status of all platform services. Deployed via jameswynn Helm chart. Provides a single pane of glass for the platform. Live at <a href=\"https://homepage.mmrajputhomelab.org/\" target=\"_blank\" rel=\"noopener\" style=\"color:var(--app)\">homepage.mmrajputhomelab.org</a>.",
     detail: "Deployed via ArgoCD. ConfigMap-driven service definitions. Connects to Prometheus, Grafana, and other services via their ClusterIP Services. Exposed via nginx-ingress behind Cloudflare Access.",
     tags: ["Deployment", "ConfigMap (services config)", "Ingress (nginx)", "Service (ClusterIP)", "Cloudflare Access"]
   },
@@ -1109,7 +1114,7 @@ const modals = {
     title: "GitHub",
     color: "var(--cicd)",
     desc: "Source of truth for all configuration and infrastructure. Helm values files define the desired image tags for each workload. The promotion pipeline commits updated tags back here, which ArgoCD then detects.",
-    detail: "Repository: github.com/mmrajput/kubernetes-homelab. GitOps principle: the repo is the source of truth — no image is deployed without its tag being committed to Git first. Conventional commits. Branch protection rules enforce PR review before merging to main. <code>.gitignore</code> requires explicit negation rules for files containing 'secret' in the name.",
+    detail: "Repository: github.com/mmrajput/kubernetes-single-cluster. GitOps principle: the repo is the source of truth — no image is deployed without its tag being committed to Git first. Conventional commits. Branch protection rules enforce PR review before merging to main. <code>.gitignore</code> requires explicit negation rules for files containing 'secret' in the name.",
     tags: ["Git repository", "Helm values files", "Branch protection", "Conventional commits", "PR-based workflow"]
   },
   ghactions: {
@@ -1157,7 +1162,7 @@ const modals = {
     title: "ArgoCD Hub",
     color: "var(--future)",
     desc: "Single ArgoCD instance on the host Talos cluster managing all three clusters — the host itself plus the two vClusters. App-of-Apps pattern extended across cluster boundaries.",
-    detail: "ArgoCD registers the vCluster kubeconfigs as external cluster targets. Each vCluster gets its own ArgoCD Application set. GitOps principle unchanged — all changes via Git, ArgoCD syncs. Builds on the App-of-Apps pattern already proven in the current homelab.",
+    detail: "ArgoCD registers the vCluster kubeconfigs as external cluster targets. Each vCluster gets its own ArgoCD Application set. GitOps principle unchanged — all changes via Git, ArgoCD syncs.",
     tags: ["ArgoCD Hub (host cluster)", "Multi-cluster target registration", "App-of-Apps", "vCluster kubeconfig sync"]
   },
   "next-cilium": {
@@ -1173,7 +1178,7 @@ const modals = {
     title: "Vault + ESO",
     color: "var(--future)",
     desc: "Single Vault instance on the management plane as the source of truth for all secrets. ESO distributes secrets to both vClusters via ClusterSecretStore — vClusters do not manage their own secrets.",
-    detail: "Same Vault KV v2 pattern as the current homelab. ESO ClusterSecretStore on each vCluster points back to the management plane Vault. Secrets never live in Git. Keycloak client secrets, CNPG credentials, and MinIO access keys all flow through this path.",
+    detail: "Same Vault KV v2 pattern as in single-cluster platform. ESO ClusterSecretStore on each vCluster points back to the management plane Vault. Secrets never live in Git. Keycloak client secrets, CNPG credentials, and MinIO access keys all flow through this path.",
     tags: ["Vault KV v2 (host cluster)", "ESO ClusterSecretStore (per vCluster)", "Cross-cluster secret distribution", "No secrets in Git"]
   },
   "next-keycloak": {
@@ -1181,7 +1186,7 @@ const modals = {
     title: "Keycloak",
     color: "var(--future)",
     desc: "Single Keycloak instance on the management plane acts as the identity provider for all clusters. All workloads in both vClusters authenticate via this central Keycloak — no per-cluster identity setup.",
-    detail: "Same Keycloak 26.x setup as the current homelab, extended to cover vCluster workloads. OIDC clients registered for Nextcloud (production and staging), ArgoCD Hub, Grafana. Group membership mapper pattern unchanged. Reachable from vClusters via Cilium Cluster Mesh service discovery.",
+    detail: "Same Keycloak 26.x setup as in single-cluster platform, extended to cover vCluster workloads. OIDC clients registered for Nextcloud (production and staging), ArgoCD Hub, Grafana. Group membership mapper pattern unchanged. Reachable from vClusters via Cilium Cluster Mesh service discovery.",
     tags: ["Keycloak 26.x (host cluster)", "OIDC clients (all workloads)", "Group membership mapper", "Cluster Mesh reachability"]
   },
   "next-storage": {
@@ -1205,15 +1210,15 @@ const modals = {
     title: "Velero",
     color: "var(--future)",
     desc: "Single Velero instance on the management plane backs up all clusters. vCluster resources and PVCs backed up to MinIO. CNPG native backup (WAL + base backups) remains the primary DB backup method.",
-    detail: "Velero on the host cluster can reach vCluster namespaces directly since vClusters run as Pods in host namespaces. BackupStorageLocation points to MinIO. CNPG PVCs excluded from Velero via annotation — CNPG handles its own WAL archiving to MinIO as in the current homelab.",
+    detail: "Velero on the host cluster can reach vCluster namespaces directly since vClusters run as Pods in host namespaces. BackupStorageLocation points to MinIO. CNPG PVCs excluded from Velero via annotation — CNPG handles its own WAL archiving to MinIO.",
     tags: ["Velero (host cluster)", "BackupStorageLocation (MinIO)", "vCluster namespace backup", "CNPG WAL (complementary)", "Schedule CRD"]
   },
   "next-nextcloud-prod": {
     layer: "Next Project · vCluster Production",
     title: "Nextcloud (Production)",
     color: "var(--gitops)",
-    desc: "Production Nextcloud instance running inside the production vCluster. Keycloak SSO via the management plane identity provider. All data stays within the homelab — DSGVO/Schrems II compliant.",
-    detail: "Same stack as the current homelab Nextcloud: CNPG PostgreSQL, Redis (mandatory for distributed locking), Longhorn RWX PVC via vCluster PV sync, nginx-ingress, Cloudflare Tunnel for external TLS. ESO pulls secrets from management plane Vault. Promoted to production via manual Git tag gate.",
+    desc: "Production Nextcloud instance running inside the production vCluster. Keycloak SSO via the management plane identity provider. All data stays locally — DSGVO/Schrems II compliant.",
+    detail: "Same stack as the single-cluster Nextcloud: CNPG PostgreSQL, Redis (mandatory for distributed locking), Longhorn RWX PVC via vCluster PV sync, nginx-ingress, Cloudflare Tunnel for external TLS. ESO pulls secrets from management plane Vault. Promoted to production via manual Git tag gate.",
     tags: ["Deployment (vcluster-production)", "CNPG Cluster (production DB)", "Redis (mandatory)", "PVC (Longhorn RWX via PV sync)", "Keycloak SSO (management plane)"]
   },
   "next-cnpg-prod": {
@@ -1228,7 +1233,7 @@ const modals = {
     layer: "Next Project · vCluster Production",
     title: "Homepage (Production)",
     color: "var(--gitops)",
-    desc: "Homepage dashboard deployed in the production vCluster. Shows status of production services. Same jameswynn Helm chart pattern as the current homelab.",
+    desc: "Homepage dashboard deployed in the production vCluster. Shows status of production services. Same jameswynn Helm chart pattern as in the single-cluster platform.",
     detail: "ConfigMap-driven service definitions pointing to production Nextcloud, CNPG, and management plane observability stack. Exposed via nginx-ingress and Cloudflare Tunnel. Connects to Prometheus on the management plane for service health data.",
     tags: ["Deployment (vcluster-production)", "ConfigMap (services config)", "Ingress (nginx)", "Cloudflare Tunnel"]
   },
@@ -1253,7 +1258,7 @@ const modals = {
     title: "Falco",
     color: "var(--sec)",
     desc: "Runtime threat detection on the host Talos cluster. Because vCluster workloads run as Pods on the host, a single Falco DaemonSet on the host nodes monitors syscall activity across all vCluster environments simultaneously.",
-    detail: "Same Falco deployment pattern as the current homelab. Multi-cluster topology actually strengthens the value here — one Falco instance covers production and staging vCluster pods without needing a separate Falco per vCluster. Rules scoped to detect container escapes, unexpected privilege escalation, and anomalous network activity.",
+    detail: "Same Falco deployment pattern as single-cluster platform. Multi-cluster topology actually strengthens the value here — one Falco instance covers production and staging vCluster pods without needing a separate Falco per vCluster. Rules scoped to detect container escapes, unexpected privilege escalation, and anomalous network activity.",
     tags: ["Falco DaemonSet (host cluster)", "Syscall monitoring (all vCluster pods)", "FalcoRules CRD", "Runtime threat detection"]
   },
   "next-netpol": {
@@ -1261,7 +1266,7 @@ const modals = {
     title: "CiliumNetworkPolicy",
     color: "var(--sec)",
     desc: "Replaces Calico NetworkPolicy with Cilium's native CiliumNetworkPolicy CRD. eBPF-based enforcement at the kernel level. More expressive than the standard Kubernetes NetworkPolicy API — supports L7 rules, DNS-based policies, and cluster-wide policies.",
-    detail: "Default-deny posture carried over from the current homelab. CiliumNetworkPolicy allows cross-cluster rules via Cluster Mesh — management plane services (Vault, Keycloak) can be explicitly allowed as egress targets from vCluster workloads without opening broad CIDR ranges. Hubble provides visibility into what traffic is being allowed or dropped.",
+    detail: "Default-deny posture carried over from the single-cluster platform. CiliumNetworkPolicy allows cross-cluster rules via Cluster Mesh — management plane services (Vault, Keycloak) can be explicitly allowed as egress targets from vCluster workloads without opening broad CIDR ranges. Hubble provides visibility into what traffic is being allowed or dropped.",
     tags: ["CiliumNetworkPolicy CRD", "Default-deny posture", "L7 / DNS-based rules", "Cluster Mesh egress control", "Hubble (policy visibility)"]
   },
   "next-certmanager": {
@@ -1276,7 +1281,7 @@ const modals = {
     layer: "Next Project · Security",
     title: "Cloudflare Tunnel",
     color: "var(--sec)",
-    desc: "Same Cloudflare Tunnel + Access pattern as the current homelab. Terminates external TLS at the Cloudflare edge and proxies to the host cluster's nginx-ingress. Cloudflare Access protects unauthenticated UIs. No inbound ports opened on the home network.",
+    desc: "Same Cloudflare Tunnel + Access pattern as in the single-cluster platform. Terminates external TLS at the Cloudflare edge and proxies to the host cluster's nginx-ingress. Cloudflare Access protects unauthenticated UIs. No inbound ports opened on the home network.",
     detail: "Cloudflare Tunnel runs as a Deployment on the host cluster pointing at nginx-ingress NodePort. Production and staging vCluster workloads are exposed through the same tunnel via hostname-based routing — separate subdomains per environment. Cloudflare Access rules protect any service not behind Keycloak SSO.",
     tags: ["cloudflared Deployment (host)", "Cloudflare Access (Zero Trust)", "nginx-ingress (host)", "Hostname-based routing (prod/staging)", "No inbound ports"]
   }
