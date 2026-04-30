@@ -3,7 +3,7 @@
 Production-oriented Kubernetes platforms and job application proposals.
 Covers the full engineering stack: GitOps, Observability, Security, SSO, Databases, Backup & Recovery, and AI/LLM.
 
-Live: **https://mmrajput.github.io/project-portfolio***
+Live: **https://mmrajput.github.io/project-portfolio**
 
 ## Projects
 
