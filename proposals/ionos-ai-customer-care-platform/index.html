@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IONOS · AI Customer Care Platform — DevOps Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0d0f12;
+    --bg2:       #131720;
+    --bg3:       #1a1f2e;
+    --border:    #2a3244;
+    --border2:   #3a4860;
+    --text:      #dde4f0;
+    --text2:     #9aaac8;
+    --text3:     #5a6a88;
+    --accent:    #4e9eff;
+    --accent2:   #2563c4;
+    --green:     #3dd98f;
+    --green-bg:  #0e2a1e;
+    --green-bd:  #1e5438;
+    --amber:     #f5b040;
+    --amber-bg:  #2a1d08;
+    --amber-bd:  #5a3c10;
+    --purple:    #b89cfc;
+    --purple-bg: #1a1030;
+    --purple-bd: #3a2860;
+    --teal:      #2ee8cc;
+    --teal-bg:   #0a2020;
+    --teal-bd:   #1a5050;
+    --red:       #f87171;
+    --red-bg:    #2a0e0e;
+    --red-bd:    #4a1a1a;
+    --tag-bg:    #1e2840;
+    --tag-text:  #7a94c0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── header ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .header-left { display: flex; flex-direction: column; gap: 6px; }
+  .header-link {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+  }
+  .header-link:hover { color: var(--accent); }
+  header h1 {
+    font-size: 22px;
+    font-weight: 500;
+    color: #e8edf8;
+    letter-spacing: -0.02em;
+  }
+  .header-sub {
+    font-size: 12px;
+    color: #8898b8;
+    letter-spacing: 0.01em;
+  }
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #6070a0;
+  }
+
+  /* ── main ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── section (zone) ── */
+  .zone {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 28px 0;
+    overflow: hidden;
+  }
+
+  .zone-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    gap: 12px;
+  }
+  .zone-header:hover { background: var(--bg3); }
+
+  .zone-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #edf2fc;
+    letter-spacing: 0.01em;
+  }
+  .zone-subtitle {
+    font-size: 11px;
+    color: #7a90b8;
+    font-family: 'IBM Plex Mono', monospace;
+    flex: 1;
+    margin-left: 12px;
+  }
+  .zone-chevron {
+    font-size: 10px;
+    color: #5a6a88;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .zone.collapsed .zone-chevron { transform: rotate(-90deg); }
+  .zone.collapsed .zone-body { display: none; }
+
+  .zone-body {
+    padding: 20px;
+    background: var(--bg);
+  }
+
+  /* ── card grid ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .card-grid:last-child { margin-bottom: 0; }
+
+  /* ── card ── */
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 12px 14px;
+    background: var(--bg2);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.15s;
+    position: relative;
+  }
+  .card:hover { border-color: var(--border2); }
+
+  .card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #edf0fa;
+    letter-spacing: 0.005em;
+  }
+  .card-desc {
+    font-size: 12px;
+    color: #8a9ec0;
+    line-height: 1.55;
+    font-weight: 400;
+  }
+  .card-tag {
+    margin-top: 6px;
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    background: #1e2a42;
+    color: #8aa0cc;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+    width: fit-content;
+    border: 1px solid #2a3a58;
+  }
+
+  /* colour variants */
+  .card.green  { border-color: var(--green-bd);  background: #0c2218; }
+  .card.amber  { border-color: var(--amber-bd);  background: #221608; }
+  .card.purple { border-color: var(--purple-bd); background: #160e28; }
+  .card.teal   { border-color: var(--teal-bd);   background: #081c1c; }
+  .card.red    { border-color: var(--red-bd);    background: var(--red-bg); }
+
+  .card.green  .card-name { color: #5ee8a8; }
+  .card.amber  .card-name { color: #ffc060; }
+  .card.purple .card-name { color: #c8aafe; }
+  .card.teal   .card-name { color: #40ecd4; }
+  .card.red    .card-name { color: var(--red); }
+
+  .card.green  .card-desc { color: #7ab898; }
+  .card.amber  .card-desc { color: #b89060; }
+  .card.purple .card-desc { color: #9880c8; }
+  .card.teal   .card-desc { color: #60b8b0; }
+
+  .card.green  .card-tag { background: #0a2018; color: #40b880; border-color: #1a4830; }
+  .card.amber  .card-tag { background: #201408; color: #d09030; border-color: #483010; }
+  .card.purple .card-tag { background: #120c24; color: #9070d0; border-color: #302050; }
+  .card.teal   .card-tag { background: #081818; color: #28c0a8; border-color: #144040; }
+  .card.red    .card-tag { background: #200a0a; color: #c05050; border-color: #401818; }
+
+  /* gap badge */
+  .gap-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    background: var(--amber-bg);
+    color: var(--amber);
+    border: 1px solid var(--amber-bd);
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── pipeline row ── */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-top: 12px;
+  }
+  .pipeline-step {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #ccd8ee;
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+  }
+  .pipeline-step span {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    color: #6a7a98;
+    margin-top: 2px;
+  }
+  .pipeline-arrow {
+    color: #4a5a78;
+    font-size: 12px;
+    padding: 0 6px;
+    flex-shrink: 0;
+  }
+  .pipeline-step.gate {
+    border-color: #4a3a10;
+    background: #201c08;
+    color: #ffc060;
+  }
+  .pipeline-step.gap-step {
+    border-color: var(--amber-bd);
+    background: var(--amber-bg);
+    color: var(--amber);
+  }
+
+  /* ── legend ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px 0 0;
+    margin-top: 4px;
+    border-top: 1px solid var(--border);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #8898b8;
+  }
+  .legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── phase banner ── */
+  .phase-banner {
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    background: var(--bg3);
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .phase-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .phase-desc {
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  /* ── compliance footer band ── */
+  .compliance {
+    border: 1px solid var(--teal-bd);
+    border-radius: 10px;
+    background: #081c1c;
+    padding: 16px 20px;
+    margin: 28px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .compliance-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #40ecd4;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.05em;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+  .compliance-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    background: #0d2828;
+    color: var(--teal);
+    border: 1px solid var(--teal-bd);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  /* ── flow arrows between zones ── */
+  .flow-arrow {
+    text-align: center;
+    color: #3a4a62;
+    font-size: 16px;
+    margin: -12px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── page footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #5a6a88;
+  }
+  footer a { color: #5a6a88; text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* ── section divider label ── */
+  .divider {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: #5a6a88;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 0 10px;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 20px 16px; }
+    main { padding: 0 12px 60px; }
+    .card-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    footer { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <a class="header-link" href="https://mmrajput.github.io/project-portfolio/">mmrajput.github.io/project-portfolio</a>
+    <h1>IONOS · AI Customer Care Platform — DevOps Roadmap</h1>
+    <p class="header-sub">Proposed platform engineering approach · DevOps Engineer · IONOS Karlsruhe</p>
+  </div>
+  <div class="header-meta">
+    <span>IONOS SE · Karlsruhe</span>
+    <span>Customer Care AI · S2S · MCP · LLM orchestration</span>
+    <span>8M contracts · 20+ locations · 2000+ users</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- Legend -->
+  <div class="legend" style="margin-top:20px;">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green-bd);border:1px solid var(--green);"></div> Covered — homelab or professional exp.</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber-bg);border:1px solid var(--amber);"></div> Gap — ramp-up required</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--teal-bg);border:1px solid var(--teal);"></div> AI platform domain (new territory)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--purple-bg);border:1px solid var(--purple);"></div> External / third-party integration</div>
+  </div>
+
+  <!-- ───────────────────────────────────────────
+       ZONE 0 · Phase overview
+  ─────────────────────────────────────────────── -->
+  <div class="zone" style="margin-top:28px;">
+    <div class="zone-header" onclick="toggleZone(this)">
+      <span class="zone-title">Onboarding roadmap — phase overview</span>
+      <span class="zone-subtitle">Day 1 → Week 4 → Month 3 → Month 6</span>
+      <span class="zone-chevron">▾</span>
+    </div>
+    <div class="zone-body">
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-name">Phase 1 · Days 1–14</div>
+          <div class="card-desc">Infrastructure audit · cluster access · existing CI/CD review · Debian system familiarisation</div>
+          <div class="card-tag">onboarding</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Phase 2 · Weeks 3–6</div>
+          <div class="card-desc">GitOps migration · ArgoCD bootstrap · Helm charts for existing services · container orchestration foundation</div>
+          <div class="card-tag">GitOps foundation</div>
+        </div>
+        <div class="card amber">
+          <div class="card-name">Phase 3 · Weeks 7–12</div>
+          <div class="card-desc">AI pipeline infrastructure · MCP server hosting · vector store deployment · low-latency S2S pipeline foundations</div>
+          <div class="card-tag">AI platform</div>
+        </div>
+        <div class="card teal">
+          <div class="card-name">Phase 4 · Month 4–6</div>
+          <div class="card-desc">Automated QA module · evaluation scheduling · feedback loop observability · ELK + tracing layer</div>
+          <div class="card-tag">self-evolving ops</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- ───────────────────────────────────────────
+       ZONE 1 · Linux & infrastructure baseline
+  ─────────────────────────────────────────────── -->
+  <div class="zone">
+    <div class="zone-header" onclick="toggleZone(this)">
+      <span class="zone-title">Linux systems & infrastructure baseline</span>
+      <span class="zone-subtitle">Debian · VM fleet · HA across DCs · provisioning automation · Ansible</span>
+      <span class="zone-chevron">▾</span>
+    </div>
+    <div class="zone-body">
+      <div class="phase-banner">
+        <span class="phase-label">Phase 1</span>
+        <span class="phase-desc">Audit existing Debian systems, harden configuration, establish Ansible-driven provisioning baseline across all locations.</span>
+      </div>
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-name">Linux (Ubuntu/Debian)</div>
+          <div class="card-desc">5+ yrs Ubuntu administration · Proxmox host management · systemd · kernel tuning</div>
+          <div class="card-tag">sysadmin</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Ansible</div>
+          <div class="card-desc">Cluster provisioning · cloud-init integration · idempotent playbooks · role-based structure</div>
+          <div class="card-tag">config mgmt</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Terraform</div>
+          <div class="card-desc">IaC for cloud resources · AWS & Azure providers · state management · modular design</div>
+          <div class="card-tag">IaC</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Bash / Python scripting</div>
+          <div class="card-desc">Automation scripts · operational tooling · Django/Flask backend experience · REST API authoring</div>
+          <div class="card-tag">scripting</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">BGP / multi-DC routing</div>
+          <div class="card-desc">BGP concepts and HA routing design across data centres · subnetting at scale · familiar conceptually</div>
+          <div class="card-tag">networking</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Networking fundamentals</div>
+          <div class="card-desc">Subnetting · Calico CNI routing · NetworkPolicy egress · pre-DNAT behaviour understood in production</div>
+          <div class="card-tag">CNI · netpol</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- ───────────────────────────────────────────
+       ZONE 2 · Container orchestration
+  ─────────────────────────────────────────────── -->
+  <div class="zone">
+    <div class="zone-header" onclick="toggleZone(this)">
+      <span class="zone-title">Container orchestration — VM → Kubernetes migration</span>
+      <span class="zone-subtitle">kubeadm · Helm · ArgoCD · namespace isolation · gradual workload lift-and-shift</span>
+      <span class="zone-chevron">▾</span>
+    </div>
+    <div class="zone-body">
+      <div class="phase-banner">
+        <span class="phase-label">Phase 2</span>
+        <span class="phase-desc">Bootstrap GitOps engine, migrate first services from VM to Kubernetes, establish namespace isolation and RBAC baseline.</span>
+      </div>
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-name">Kubernetes (kubeadm)</div>
+          <div class="card-desc">Production 3-node cluster · v1.31 · CKA in preparation (Q2 2026) · full lifecycle management</div>
+          <div class="card-tag">K8s v1.31</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">ArgoCD App-of-Apps</div>
+          <div class="card-desc">Full GitOps engine · multi-source Helm · selfHeal · bootstrap layer · staging/production split</div>
+          <div class="card-tag">GitOps</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Helm</div>
+          <div class="card-desc">Pinned chart versions · multi-source apps · values per environment · dry-run validation pattern</div>
+          <div class="card-tag">package mgmt</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Docker / containerd</div>
+          <div class="card-desc">Container authoring · multi-stage builds · OCI image standards · image promotion pipeline</div>
+          <div class="card-tag">OCI</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">Docker Swarm</div>
+          <div class="card-desc">Swarm orchestration mode · may be interim state in IONOS VM fleet · transferable from K8s</div>
+          <div class="card-tag">swarm</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">JFrog Artifactory</div>
+          <div class="card-desc">Enterprise artifact registry · Helm chart hosting · image promotion — same pattern as GHCR/crane</div>
+          <div class="card-tag">artifact registry</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- ───────────────────────────────────────────
+       ZONE 3 · CI/CD pipelines
+  ─────────────────────────────────────────────── -->
+  <div class="zone">
+    <div class="zone-header" onclick="toggleZone(this)">
+      <span class="zone-title">CI/CD pipelines & image security</span>
+      <span class="zone-subtitle">GitLab CI · GitHub Actions · Trivy CVE gate · image promotion · vulnerability tracking</span>
+      <span class="zone-chevron">▾</span>
+    </div>
+    <div class="zone-body">
+      <div class="phase-banner">
+        <span class="phase-label">Phase 1–2</span>
+        <span class="phase-desc">Audit existing pipelines, introduce Trivy CVE gating, implement controlled image promotion before ArgoCD sync.</span>
+      </div>
+      <div class="divider">Implemented pipeline (homelab)</div>
+      <div class="pipeline">
+        <div class="pipeline-step">GH Actions (ARC)<span>self-hosted K8s</span></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">Trivy scan<span>block HIGH/CRIT</span></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">crane promote<span>push to registry</span></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">Helm values update<span>tag → main commit</span></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">ArgoCD sync<span>→ staging / prod</span></div>
+      </div>
+      <div class="divider" style="margin-top:16px;">IONOS target pipeline (GitLab CI)</div>
+      <div class="pipeline">
+        <div class="pipeline-step">GitLab CI<span>build + unit test</span></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">Trivy + SBOM<span>dependency track</span></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step gap-step">JFrog Artifactory<span>artifact push</span></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step gate">Manual gate<span>prod approval</span></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">ArgoCD sync<span>→ production ns</span></div>
+      </div>
+      <div class="card-grid" style="margin-top:16px;">
+        <div class="card green">
+          <div class="card-name">GitHub Actions + ARC</div>
+          <div class="card-desc">Self-hosted runner in K8s · image build/test/promote · security gate validated in production</div>
+          <div class="card-tag">CI/CD</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">GitLab CI</div>
+          <div class="card-desc">4 yrs professional GitLab CI experience at GNS · pipeline authoring · runner configuration</div>
+          <div class="card-tag">CI/CD · GNS</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Trivy (v0.69.3)</div>
+          <div class="card-desc">Image CVE scanning · HIGH/CRITICAL block gate · OS + app scope · validated in production pipeline</div>
+          <div class="card-tag">CVE scan</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">JFrog Artifactory</div>
+          <div class="card-desc">Enterprise Helm + image registry · xray scanning integration · same operational pattern as crane/GHCR</div>
+          <div class="card-tag">artifact mgmt</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Jenkins</div>
+          <div class="card-desc">Listed in JD — Groovy pipeline authoring familiar from previous work; transferable from GitLab CI experience</div>
+          <div class="card-tag">CI/CD alt</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- ───────────────────────────────────────────
+       ZONE 4 · Observability
+  ─────────────────────────────────────────────── -->
+  <div class="zone">
+    <div class="zone-header" onclick="toggleZone(this)">
+      <span class="zone-title">Observability — metrics · logs · traces</span>
+      <span class="zone-subtitle">Prometheus · Grafana · Loki · ELK · Jaeger · alerting for AI pipeline health</span>
+      <span class="zone-chevron">▾</span>
+    </div>
+    <div class="zone-body">
+      <div class="phase-banner">
+        <span class="phase-label">Phase 2–3</span>
+        <span class="phase-desc">Extend existing Prometheus/Grafana/Loki to cover AI pipeline metrics. Layer in Jaeger/OpenTelemetry for distributed tracing across S2S and LLM orchestration services.</span>
+      </div>
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-name">Prometheus</div>
+          <div class="card-desc">kube-prometheus-stack · ServiceMonitor CRDs · custom alerting rules · cluster-wide scrape</div>
+          <div class="card-tag">metrics</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Grafana</div>
+          <div class="card-desc">Custom dashboards · OIDC SSO via Keycloak · public dashboards · alerting integration</div>
+          <div class="card-tag">dashboards</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Loki + Promtail</div>
+          <div class="card-desc">Log aggregation · DaemonSet · MinIO S3 backend for long-term retention · LogQL queries</div>
+          <div class="card-tag">logs</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">ELK Stack</div>
+          <div class="card-desc">Elasticsearch · Logstash · Kibana — operational pattern identical to Loki; tool familiarisation needed</div>
+          <div class="card-tag">log analytics</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">Jaeger / OpenTelemetry</div>
+          <div class="card-desc">Distributed tracing for LLM chains and S2S pipelines · trace context propagation · latency analysis</div>
+          <div class="card-tag">tracing</div>
+        </div>
+        <div class="card teal">
+          <div class="card-name">AI pipeline alerting</div>
+          <div class="card-desc">Custom metrics for hallucination rate · response quality scores · latency p95/p99 · nightly eval job alerts</div>
+          <div class="card-tag">AI observability</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Uptime Kuma</div>
+          <div class="card-desc">Endpoint health monitoring · SLA tracking · public status page · incident notification</div>
+          <div class="card-tag">SLA · uptime</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Alertmanager</div>
+          <div class="card-desc">Alert routing · inhibition rules · rapid response for unhealthy AI pipeline patterns</div>
+          <div class="card-tag">alerting</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- ───────────────────────────────────────────
+       ZONE 5 · Security & secrets
+  ─────────────────────────────────────────────── -->
+  <div class="zone">
+    <div class="zone-header" onclick="toggleZone(this)">
+      <span class="zone-title">Security, identity & secrets management</span>
+      <span class="zone-subtitle">Vault · ESO · Keycloak · OIDC · NetworkPolicy · ISO security standards · zero static secrets</span>
+      <span class="zone-chevron">▾</span>
+    </div>
+    <div class="zone-body">
+      <div class="phase-banner">
+        <span class="phase-label">Phase 1–2</span>
+        <span class="phase-desc">Extend secret management to all services. Enforce default-deny NetworkPolicy. Harden OIDC flows for internal tooling. Document ISO control mapping.</span>
+      </div>
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-name">HashiCorp Vault</div>
+          <div class="card-desc">KV v2 · Shamir unseal · Longhorn PVC · ESO ClusterSecretStore · no static secrets in Git</div>
+          <div class="card-tag">secrets</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">External Secrets Op.</div>
+          <div class="card-desc">Vault → K8s secret sync · ESO v2.1.0 · per-namespace stores · least-privilege remoteRefs</div>
+          <div class="card-tag">ESO v2.1.0</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Keycloak 26.x</div>
+          <div class="card-desc">OIDC/OAuth2 broker · SSO for ArgoCD / Grafana / Nextcloud · group-based RBAC · MFA</div>
+          <div class="card-tag">OIDC · SSO</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">NetworkPolicy</div>
+          <div class="card-desc">Default-deny · Calico enforcement · pre-DNAT egress · documented per-namespace exceptions</div>
+          <div class="card-tag">default-deny</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">RBAC + PSS</div>
+          <div class="card-desc">Least-privilege service accounts · restricted PSS enforced · no wildcards · audit logging</div>
+          <div class="card-tag">RBAC · PSS</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">cert-manager</div>
+          <div class="card-desc">Let's Encrypt DNS-01 · Cloudflare API · wildcard TLS · mTLS between services</div>
+          <div class="card-tag">TLS · PKI</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">ISO 27001 formal</div>
+          <div class="card-desc">ISMS documentation · audit process · formal control mapping — security posture implemented, documentation formal gap</div>
+          <div class="card-tag">ISMS</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">Ansible Vault</div>
+          <div class="card-desc">Ansible-native secret encryption · transferable from HashiCorp Vault + SOPS experience</div>
+          <div class="card-tag">ansible secrets</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- ───────────────────────────────────────────
+       ZONE 6 · Storage & databases
+  ─────────────────────────────────────────────── -->
+  <div class="zone">
+    <div class="zone-header" onclick="toggleZone(this)">
+      <span class="zone-title">Storage, databases & backup</span>
+      <span class="zone-subtitle">PostgreSQL · Redis · MinIO S3 · Longhorn PVs · Velero · 3-2-1 backup strategy</span>
+      <span class="zone-chevron">▾</span>
+    </div>
+    <div class="zone-body">
+      <div class="phase-banner">
+        <span class="phase-label">Phase 2</span>
+        <span class="phase-desc">Stand up CNPG-managed PostgreSQL for AI platform metadata. Deploy Redis for caching layer. Validate backup and PITR procedures.</span>
+      </div>
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-name">CloudNativePG</div>
+          <div class="card-desc">PostgreSQL operator · WAL archiving to MinIO · PITR · TLS · automated failover · per-app clusters</div>
+          <div class="card-tag">WAL · PITR</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Redis</div>
+          <div class="card-desc">Caching layer · distributed locking · mandatory for stateful multi-replica workloads</div>
+          <div class="card-tag">cache</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">MinIO (S3-compat)</div>
+          <div class="card-desc">Object storage for CNPG backups · Velero backend · Loki long-term storage · WAL archive target</div>
+          <div class="card-tag">S3-compat</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Longhorn</div>
+          <div class="card-desc">Default StorageClass · RF=2 replication · PVs for stateful workloads · Velero integration</div>
+          <div class="card-tag">RF=2 · PV</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Velero + rclone</div>
+          <div class="card-desc">3-2-1 backup strategy · CSI snapshots · offsite OneDrive replication · tested restore procedures</div>
+          <div class="card-tag">backup · DR</div>
+        </div>
+        <div class="card teal">
+          <div class="card-name">Vector store (AI)</div>
+          <div class="card-desc">pgvector on CNPG or Qdrant/Weaviate for LLM context retrieval · persistent PV · backup included</div>
+          <div class="card-tag">vector DB</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- ───────────────────────────────────────────
+       ZONE 7 · AI platform infrastructure
+  ─────────────────────────────────────────────── -->
+  <div class="zone">
+    <div class="zone-header" onclick="toggleZone(this)">
+      <span class="zone-title">AI platform infrastructure — MCP · LLM · S2S pipeline</span>
+      <span class="zone-subtitle">MCP servers · vector stores · Speech-to-Speech · LLM hosting · sub-500ms latency target</span>
+      <span class="zone-chevron">▾</span>
+    </div>
+    <div class="zone-body">
+      <div class="phase-banner">
+        <span class="phase-label">Phase 3</span>
+        <span class="phase-desc">Host and operate the AI pipeline workloads as Kubernetes Deployments — same operational pattern as existing stateful homelab workloads, applied to a new domain.</span>
+      </div>
+      <div class="card-grid">
+        <div class="card teal">
+          <div class="card-name">MCP server hosting</div>
+          <div class="card-desc">Model Context Protocol servers as K8s Deployments · Helm charts · NetworkPolicy egress to CRM APIs · ESO secrets</div>
+          <div class="card-tag">MCP · K8s</div>
+        </div>
+        <div class="card teal">
+          <div class="card-name">LLM inference hosting</div>
+          <div class="card-desc">Open-source LLM inference (vLLM / Ollama) · GPU node scheduling · resource limits · HPA on token throughput</div>
+          <div class="card-tag">LLM ops</div>
+        </div>
+        <div class="card teal">
+          <div class="card-name">Vector store</div>
+          <div class="card-desc">pgvector on CNPG or Qdrant · persistent storage · backup strategy consistent with platform pattern</div>
+          <div class="card-tag">RAG · retrieval</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">S2S / WSS / SRTP</div>
+          <div class="card-desc">Speech-to-Speech latency pipeline · WebSocket Secure · SRTP media transport · sub-500ms RTT design</div>
+          <div class="card-tag">voice · streaming</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">Telephony gateway</div>
+          <div class="card-desc">SIP/RTP protocols · Twilio / Amazon Connect · IONOS telephony stack — listed as nice-to-have</div>
+          <div class="card-tag">SIP · RTP</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Stateful workload ops</div>
+          <div class="card-desc">Nextcloud + CNPG + Redis + MinIO — same multi-component pattern required for AI pipeline services</div>
+          <div class="card-tag">ops pattern</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- ───────────────────────────────────────────
+       ZONE 8 · Automated QA & evaluation
+  ─────────────────────────────────────────────── -->
+  <div class="zone">
+    <div class="zone-header" onclick="toggleZone(this)">
+      <span class="zone-title">Automated QA & evaluation module</span>
+      <span class="zone-subtitle">Nightly eval jobs · quality metrics · hallucination alerting · feedback loop plumbing</span>
+      <span class="zone-chevron">▾</span>
+    </div>
+    <div class="zone-body">
+      <div class="phase-banner">
+        <span class="phase-label">Phase 4</span>
+        <span class="phase-desc">Design and operate the evaluation pipeline: CronJobs for nightly runs, Prometheus metrics for quality scores, Alertmanager rules for threshold breaches.</span>
+      </div>
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-name">Kubernetes CronJobs</div>
+          <div class="card-desc">Scheduled eval runs · nightly test suite · resource-bounded · failure alerting via Alertmanager</div>
+          <div class="card-tag">scheduling</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Prometheus custom metrics</div>
+          <div class="card-desc">Pushgateway for batch job results · quality score gauges · hallucination rate counters · latency histograms</div>
+          <div class="card-tag">custom metrics</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Alertmanager rules</div>
+          <div class="card-desc">Threshold breach alerts → PagerDuty / Slack · rapid response SLA for quality degradation · inhibition logic</div>
+          <div class="card-tag">alerting</div>
+        </div>
+        <div class="card teal">
+          <div class="card-name">Eval result storage</div>
+          <div class="card-desc">CNPG PostgreSQL for eval run history · Grafana dashboard for quality trends · MinIO for raw eval artifacts</div>
+          <div class="card-tag">eval persistence</div>
+        </div>
+        <div class="card amber">
+          <div class="gap-badge">gap</div>
+          <div class="card-name">LLM eval frameworks</div>
+          <div class="card-desc">DeepEval / RAGAS / LangSmith — programmatic quality measurement frameworks · ramp-up during Phase 3</div>
+          <div class="card-tag">eval tooling</div>
+        </div>
+        <div class="card green">
+          <div class="card-name">Python pipeline authoring</div>
+          <div class="card-desc">5 yrs Python incl. ML pipelines · data extraction / preprocessing / validation · directly applicable to eval plumbing</div>
+          <div class="card-tag">Python · ML ops</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────────────────
+       Compliance / standards envelope
+  ─────────────────────────────────────────────── -->
+  <div class="compliance">
+    <span class="compliance-label">Security & compliance envelope</span>
+    <span class="compliance-tag">ISO 27001 controls</span>
+    <span class="compliance-tag">GDPR / DSGVO</span>
+    <span class="compliance-tag">BSI IT-Grundschutz SYS.1.6</span>
+    <span class="compliance-tag">OpenID Connect · OAuth2</span>
+    <span class="compliance-tag">Zero static secrets in Git</span>
+    <span class="compliance-tag">CVE gate in every pipeline</span>
+    <span class="compliance-tag">RBAC least-privilege</span>
+    <span class="compliance-tag">Audit log → Loki</span>
+  </div>
+
+</main>
+
+<footer>
+  <span>Mahmood Mubarak Rajput · <a href="https://github.com/mmrajput" target="_blank">github.com/mmrajput</a> · <a href="https://mmrajput.github.io/project-portfolio" target="_blank">mmrajput.github.io/project-portfolio</a></span>
+  <span>IONOS SE · DevOps Engineer · Customer Care AI Platform · Karlsruhe · 2026</span>
+</footer>
+
+<script>
+  function toggleZone(header) {
+    header.closest('.zone').classList.toggle('collapsed');
+  }
+</script>
+
+</body>
+</html>

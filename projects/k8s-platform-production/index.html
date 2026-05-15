@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kubernetes Platform Production </title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1628;--surface:#112240;--surface2:#0d1b33;--border:#1e3a5f;
+  --text:#cdd6f4;--muted:#7a9cc0;--dim:#2a4a6e;
+  --virt:#7eb8f7;--gitops:#7de8a0;--obs:#ffd080;--sec:#ff7096;
+  --stor:#5ee8d8;--id:#c59dff;--ha:#f87fa0;--idp:#34d4a0;--idp-alt:#7effd4;
+  --ci:#ffb86c;--infra:#7eb8f7;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(126,184,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(126,184,247,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;width:800px;height:800px;top:-300px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(52,212,160,.05) 0%,transparent 70%);pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:48px 24px 80px;perspective:1200px}
+
+/* ── HEADER ── */
+header{text-align:center;margin-bottom:24px;animation:fadeDown .8s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:var(--surface);padding:5px 14px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;cursor:pointer;text-decoration:none}
+.header-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--idp);animation:pulse 2s ease infinite;flex-shrink:0}
+h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(135deg,#e8f0ff 30%,var(--idp) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:8px}
+.subtitle{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+.tagline{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--idp);border:1px solid rgba(52,212,160,.3);background:rgba(52,212,160,.05);padding:5px 16px;display:inline-block;margin-bottom:16px}
+.hw-bar{display:inline-flex;gap:0;border:1px solid var(--border);overflow:hidden;flex-wrap:wrap}
+.hw-chip{padding:5px 12px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);border-right:1px solid var(--border);background:var(--surface);letter-spacing:.05em}
+.hw-chip:last-child{border-right:none}
+.hw-chip span{color:var(--virt)}
+
+/* ── BOOTSTRAP TIMELINE ── */
+.section-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:center;margin:16px 0 16px;opacity:.7}
+.bootstrap-timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--border);overflow:hidden;margin-bottom:8px}
+.bt-phase{padding:12px 14px;border-right:1px solid var(--border);position:relative;cursor:pointer;transition:background .2s,transform .15s}
+.bt-phase:last-child{border-right:none}
+.bt-phase:hover{transform:translateY(-2px)}
+.bt-num{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;margin-bottom:4px}
+.bt-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.bt-desc{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6;letter-spacing:.02em}
+.bt-click{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);opacity:.45;margin-top:8px;letter-spacing:.08em;text-transform:uppercase}
+.bt-phase.imperative{background:rgba(126,184,247,.03)}
+.bt-phase.imperative:hover{background:rgba(126,184,247,.07)}
+.bt-phase.imperative .bt-title{color:var(--virt)}
+.bt-phase.pivot{background:rgba(255,112,150,.03)}
+.bt-phase.pivot:hover{background:rgba(255,112,150,.07)}
+.bt-phase.pivot .bt-title{color:var(--sec)}
+.bt-phase.gitops{background:rgba(52,212,160,.03)}
+.bt-phase.gitops:hover{background:rgba(52,212,160,.07)}
+.bt-phase.gitops .bt-title{color:var(--idp)}
+.bt-boundary{display:flex;gap:12px;justify-content:center;margin-bottom:36px;flex-wrap:wrap}
+.bt-badge{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.1em;padding:3px 10px;border:1px solid;text-transform:uppercase}
+@media(max-width:700px){.bootstrap-timeline{grid-template-columns:1fr 1fr}}
+
+/* ── PLANES ── */
+.plane{border:1px solid;margin-bottom:0;position:relative;animation:fadeUp .6s ease both;transform-style:preserve-3d;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.plane-header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-bottom:1px solid var(--border)}
+.plane-title-group{display:flex;align-items:center;gap:12px}
+.plane-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.plane-name{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.plane-desc{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em}
+.plane-body{padding:20px}
+.plane-cp{border-color: rgba(126,184,247,.45);background: rgba(126,184,247,.04);animation-delay:.05s}
+.plane-cp .plane-name{color:var(--virt)}
+.plane-mp{border-color: rgba(52,212,160,.45);background: rgba(52,212,160,.04);animation-delay:.1s}
+.plane-mp .plane-name{color:var(--idp)}
+.plane-wp{border-color: rgba(255,208,128,.45);background: rgba(255,208,128,.04);animation-delay:.15s}
+.plane-wp .plane-name{color:var(--obs)}
+.planes-3d{transform-style:preserve-3d;transform:rotateX(4deg);transition:transform .4s ease}
+.planes-3d:hover{transform:rotateX(1deg)}
+
+/* ── LAYERS INSIDE PLANES ── */
+.layer{border:1px solid var(--border);margin-bottom:8px}
+.layer:last-child{margin-bottom:0}
+.layer-header{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;border-bottom:1px solid transparent;cursor:pointer;user-select:none;transition:background .2s}
+.layer-header:hover .layer-toggle{color:var(--idp)}
+.layer.open .layer-header{border-bottom-color:var(--border)}
+.layer-title-group{display:flex;align-items:center;gap:10px}
+.layer-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.layer-name{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+.layer-toggle{font-family:'Share Tech Mono',monospace;font-size:18px;color:rgba(255,255,255,.4);transition:transform .3s, color .2s;line-height:1}
+.layer.collapsed .layer-toggle{transform:rotate(-90deg)}
+.layer-body{padding:14px 16px 16px;overflow:hidden}
+.layer.collapsed .layer-body{display:none}
+
+/* ── CARDS ── */
+.pfl{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-top:12px;margin-bottom:6px;padding:3px 8px;display:inline-block;border-left:3px solid}
+.ldesc{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);line-height:1.7;padding:10px 12px;border-left:3px solid;background:rgba(255,255,255,.02);margin-bottom:12px;letter-spacing:.03em}
+.cards{display:grid;gap:8px;margin-top:6px}
+.cards-2{grid-template-columns:repeat(2,1fr)}
+.cards-3{grid-template-columns:repeat(3,1fr)}
+.cards-4{grid-template-columns:repeat(4,1fr)}
+.cards-5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:900px){.cards-4,.cards-5{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cards-2,.cards-3,.cards-4,.cards-5{grid-template-columns:1fr}}
+.card{border:1px solid var(--border);background:var(--surface);padding:11px 13px;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;overflow:hidden;transform-style:preserve-3d}
+.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;opacity:.8}
+.card:hover{transform:translateY(-2px) translateZ(8px)}
+.card-name{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.05em;margin-bottom:4px}
+.card-desc{font-size:11px;color:var(--muted);line-height:1.55}
+.card-tag{display:inline-block;margin-top:6px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border:1px solid;font-family:'Share Tech Mono',monospace;opacity:.75}
+.card-new{position:absolute;top:6px;right:6px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.08em;padding:1px 5px;background:rgba(52,212,160,.15);border:1px solid rgba(52,212,160,.4);color:var(--idp);text-transform:uppercase}
+.card-changed{position:absolute;top:6px;right:6px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.08em;padding:1px 5px;background:rgba(255,112,150,.12);border:1px solid rgba(255,112,150,.4);color:var(--sec);text-transform:uppercase}
+
+/* layer color themes */
+.l-infra .card::before{background:var(--virt)}.l-infra .card:hover{border-color:rgba(126,184,247,.5);box-shadow:0 4px 20px rgba(126,184,247,.08)}.l-infra .card-name{color:var(--virt)}.l-infra .card-tag{border-color:rgba(126,184,247,.4);color:var(--virt)}
+.l-ha .card::before{background:var(--ha)}.l-ha .card:hover{border-color:rgba(248,127,160,.5);box-shadow:0 4px 20px rgba(248,127,160,.08)}.l-ha .card-name{color:var(--ha)}.l-ha .card-tag{border-color:rgba(248,127,160,.4);color:var(--ha)}
+.l-gitops2 .card::before{background:var(--gitops)}.l-gitops2 .card:hover{border-color:rgba(125,232,160,.5);box-shadow:0 4px 20px rgba(125,232,160,.08)}.l-gitops2 .card-name{color:var(--gitops)}.l-gitops2 .card-tag{border-color:rgba(125,232,160,.4);color:var(--gitops)}
+.l-stor .card::before{background:var(--stor)}.l-stor .card:hover{border-color:rgba(94,232,216,.5);box-shadow:0 4px 20px rgba(94,232,216,.08)}.l-stor .card-name{color:var(--stor)}.l-stor .card-tag{border-color:rgba(94,232,216,.4);color:var(--stor)}
+.l-id .card::before{background:var(--id)}.l-id .card:hover{border-color:rgba(197,157,255,.5);box-shadow:0 4px 20px rgba(197,157,255,.08)}.l-id .card-name{color:var(--id)}.l-id .card-tag{border-color:rgba(197,157,255,.4);color:var(--id)}
+.l-obs .card::before{background:var(--obs)}.l-obs .card:hover{border-color:rgba(255,208,128,.5);box-shadow:0 4px 20px rgba(255,208,128,.08)}.l-obs .card-name{color:var(--obs)}.l-obs .card-tag{border-color:rgba(255,208,128,.4);color:var(--obs)}
+.l-sec .card::before{background:var(--sec)}.l-sec .card:hover{border-color:rgba(255,112,150,.5);box-shadow:0 4px 20px rgba(255,112,150,.08)}.l-sec .card-name{color:var(--sec)}.l-sec .card-tag{border-color:rgba(255,112,150,.4);color:var(--sec)}
+.l-ci .card::before{background:var(--ci)}.l-ci .card:hover{border-color:rgba(255,184,108,.5);box-shadow:0 4px 20px rgba(255,184,108,.08)}.l-ci .card-name{color:var(--ci)}.l-ci .card-tag{border-color:rgba(255,184,108,.4);color:var(--ci)}
+.l-idp .card::before{background:var(--idp)}.l-idp .card:hover{border-color:rgba(52,212,160,.5);box-shadow:0 4px 20px rgba(52,212,160,.1)}.l-idp .card-name{color:var(--idp)}.l-idp .card-tag{border-color:rgba(52,212,160,.4);color:var(--idp)}
+
+/* scale bar */
+.scale-bar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.sc{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.08em;padding:3px 10px;border:1px solid;text-transform:uppercase}
+.sc.p{border-color:rgba(126,184,247,.4);color:var(--virt);background:rgba(126,184,247,.04)}
+.sc.g{border-color:rgba(52,212,160,.4);color:var(--idp);background:rgba(52,212,160,.04)}
+.sc.e{border-color:rgba(197,157,255,.4);color:var(--id);background:rgba(197,157,255,.04)}
+
+/* plane connector */
+.plane-connector{display:flex;justify-content:center;align-items:center;height:20px;position:relative;margin:0}
+.plane-connector::before{content:'';position:absolute;width:1px;top:0;bottom:0;left:50%;background:linear-gradient(to bottom,rgba(52,212,160,.4),transparent)}
+
+/* ── WORKLOAD MODELS ── */
+.models-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:0}
+@media(max-width:1000px){.models-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.models-grid{grid-template-columns:1fr}}
+.model-card{border:1px solid var(--border);background:var(--surface);padding:14px;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative}
+.model-card:hover{transform:translateY(-3px)}
+.model-num{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px}
+.model-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:.06em;margin-bottom:4px}
+.model-subtitle{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.04em;line-height:1.5}
+.model-tags{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.model-tag{font-family:'Share Tech Mono',monospace;font-size:10px;padding:2px 6px;border:1px solid;text-transform:uppercase;letter-spacing:.06em;width:fit-content}
+.model-diff{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px;margin-top:4px;line-height:1.55;letter-spacing:.02em}
+.model-diff span{display:block;opacity:.7;margin-bottom:2px}
+.model-git{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);margin-top:6px;opacity:.6;letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.model-1{border-color:rgba(52,212,160,.3)}.model-1:hover{border-color:rgba(52,212,160,.6);box-shadow:0 6px 24px rgba(52,212,160,.08)}.model-1 .model-num{color:var(--idp)}.model-1 .model-title{color:var(--idp)}.model-1 .model-tag{border-color:rgba(52,212,160,.4);color:var(--idp)}
+.model-2{border-color:rgba(255,112,150,.3)}.model-2:hover{border-color:rgba(255,112,150,.6);box-shadow:0 6px 24px rgba(255,112,150,.08)}.model-2 .model-num{color:var(--sec)}.model-2 .model-title{color:var(--sec)}.model-2 .model-tag{border-color:rgba(255,112,150,.4);color:var(--sec)}
+.model-3{border-color:rgba(197,157,255,.3)}.model-3:hover{border-color:rgba(197,157,255,.6);box-shadow:0 6px 24px rgba(197,157,255,.08)}.model-3 .model-num{color:var(--id)}.model-3 .model-title{color:var(--id)}.model-3 .model-tag{border-color:rgba(197,157,255,.4);color:var(--id)}
+.model-4{border-color:rgba(255,208,128,.3)}.model-4:hover{border-color:rgba(255,208,128,.6);box-shadow:0 6px 24px rgba(255,208,128,.08)}.model-4 .model-num{color:var(--obs)}.model-4 .model-title{color:var(--obs)}.model-4 .model-tag{border-color:rgba(255,208,128,.4);color:var(--obs)}
+.model-5{border-color:rgba(94,232,216,.3)}.model-5:hover{border-color:rgba(94,232,216,.6);box-shadow:0 6px 24px rgba(94,232,216,.08)}.model-5 .model-num{color:var(--stor)}.model-5 .model-title{color:var(--stor)}.model-5 .model-tag{border-color:rgba(94,232,216,.4);color:var(--stor)}
+
+/* ── GIT INTERFACE BAR ── */
+.git-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--border);overflow:hidden;margin-top:14px}
+.git-path{padding:8px 12px;border-right:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.04em}
+.git-path:last-child{border-right:none}
+.git-path-key{color:var(--muted);margin-bottom:2px;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.git-path-val{color:var(--idp)}
+@media(max-width:700px){.git-bar{grid-template-columns:1fr 1fr}}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(5,12,24,.8);z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(4px)}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%) scale(.96);width:min(600px,94vw);background:var(--surface2);border:1px solid var(--border);z-index:201;padding:32px;opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.34,1.56,.64,1);max-height:88vh;overflow-y:auto}
+.modal.open{opacity:1;pointer-events:all;transform:translate(-50%,-50%) scale(1)}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:1px solid var(--border);color:var(--muted);width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;transition:all .2s}
+.modal-close:hover{border-color:var(--sec);color:var(--sec)}
+.mlt{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}
+.mti{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:.05em;margin-bottom:16px;line-height:1.1}
+.ms{margin-bottom:16px}
+.mst{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.mt{font-size:14px;line-height:1.75;color:var(--muted)}
+.mt code{font-family:'Share Tech Mono',monospace;font-size:12px;padding:1px 5px;background:rgba(126,184,247,.1);border:1px solid var(--border);color:var(--virt)}
+.tr{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.mtag{font-family:'Share Tech Mono',monospace;font-size:11px;padding:3px 8px;border:1px solid var(--border);color:var(--muted);letter-spacing:.05em}
+.pipe-note{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin-top:10px;padding:8px 10px;border:1px solid var(--border);background:var(--surface2);letter-spacing:.03em;line-height:1.6}
+
+/* ── FOOTER ── */
+footer{margin-top:48px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;animation:fadeUp .6s ease .6s both}
+footer a{color:var(--idp);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--dim)}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<header>
+  <a href="https://github.com/mmrajput/kubernetes-platform-engineering" target="_blank" rel="noopener" class="header-badge">
+    github.com/mmrajput/kubernetes-platform-engineering
+  </a>
+  <h1>Kubernetes Platform Engineering <br> Production</h1>
+  <p class="subtitle">One Platform · Nine Layers · Five Deployment Models · Infrastructure-Agnostic</p>
+  <div class="tagline">Talos Linux · CAPI · ArgoCD GitOps · Cilium </div>
+</header>
+<!-- ══ BOOTSTRAP SEQUENCE ══ -->
+<div class="section-label">Bootstrap sequence · five phases · one time only</div>
+<div class="bootstrap-timeline">
+  <div class="bt-phase imperative" onclick="openModal('bp1')">
+    <div class="bt-num">Phase 01 · imperative</div>
+    <div class="bt-title">Bare metal prep</div>
+    <div class="bt-desc">Proxmox VE · pvecm cluster · bridge networking · raw disks for Ceph</div>
+  </div>
+  <div class="bt-phase imperative" onclick="openModal('bp2')">
+    <div class="bt-num">Phase 02 · imperative</div>
+    <div class="bt-title">Management cluster</div>
+    <div class="bt-desc">3 CP · 3 worker · 3 storage nodes · talosctl gen secrets · gen config · bootstrap</div>
+  </div>
+  <div class="bt-phase imperative" onclick="openModal('bp3')">
+    <div class="bt-num">Phase 03 · imperative</div>
+    <div class="bt-title">Core platform services</div>
+    <div class="bt-desc">cert-manager · Rook-Ceph · CNPG · GitLab CE · then ArgoCD points at GitLab · Git = source of truth from day one</div>
+  </div>
+  <div class="bt-phase pivot" onclick="openModal('bp4')">
+    <div class="bt-num">Phase 04 · pivot</div>
+    <div class="bt-title">CAPI + GitOps pivot</div>
+    <div class="bt-desc">clusterctl init · Talos node template · commit cluster manifests · last manual step ever</div>
+  </div>
+  <div class="bt-phase gitops" onclick="openModal('bp5')">
+    <div class="bt-num">Phase 05 · gitops</div>
+    <div class="bt-title">Full GitOps</div>
+    <div class="bt-desc">CAPI provisions nodes · ArgoCD deploys everything · Git is the only interface</div>
+  </div>
+</div>
+<div class="bt-boundary">
+  <span class="bt-badge" style="border-color:rgba(126,184,247,.4);color:var(--virt)">Phases 1–3: imperative zone</span>
+  <span class="bt-badge" style="border-color:rgba(255,112,150,.4);color:var(--sec)">Phase 4: pivot · last manual step</span>
+  <span class="bt-badge" style="border-color:rgba(52,212,160,.4);color:var(--idp)">Phase 5 onward: pure GitOps · no kubectl · no helm</span>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CONTROL PLANE
+══════════════════════════════════════════════ -->
+<div class="plane plane-cp" style="animation-delay:.1s">
+  <div class="plane-header">
+    <div class="plane-title-group">
+      <div class="plane-dot" style="background:var(--virt)"></div>
+      <div>
+        <div class="plane-name">Control Plane</div>
+        <div class="plane-desc">3-node HA · dedicated CP nodes · no workloads · fixed across all deployment models</div>
+      </div>
+    </div>
+    <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--virt);border:1px solid rgba(126,184,247,.3);padding:3px 10px;text-transform:uppercase;letter-spacing:.1em">infrastructure-agnostic</span>
+  </div>
+  <div class="plane-body">
+
+    <!-- Layer 1: Infrastructure -->
+    <div class="layer l-infra collapsed" id="cp-l1">
+      <div class="layer-header" onclick="toggleLayer('cp-l1')">
+        <div class="layer-title-group">
+          <div class="layer-dot" style="background:var(--virt)"></div>
+          <span class="layer-name" style="color:var(--virt)">Layer 1 · Infrastructure · Talos Linux + CAPI</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:2px 7px;text-transform:uppercase">only layer that changes per environment</span>
+          <span class="layer-toggle">▾</span>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="ldesc" style="border-color:rgba(126,184,247,.3)">Layer 1 is the only layer that changes between environments — and even here, only the hypervisor changes, not the OS. Talos Linux runs identically on Proxmox VMs, VMware, bare metal PXE, or any cloud VM. Role assignment (control plane vs worker) is determined purely by which machine config YAML is applied via talosctl. Every layer above has zero awareness of what is underneath.</div>
+        <div class="scale-bar"><span class="sc p">Pilot: Proxmox VMs · single host</span><span class="sc g">On-prem: VMware or bare-metal PXE</span><span class="sc e">Enterprise: dedicated HW · IPMI · Sidero Metal</span></div>
+        <div class="pfl" style="color:var(--virt);border-color:var(--virt);background:rgba(126,184,247,.03);margin-top:0">Node OS · Talos extensions · role assignment</div>
+        <div class="cards cards-4 l-infra">
+          <div class="card" onclick="openModal('infra-talos')"><div class="card-name">Talos Linux</div><div class="card-desc">Immutable · API-only · no SSH<br>Identical image on all node types</div><span class="card-tag">os</span></div>
+          <div class="card" onclick="openModal('infra-ext')"><div class="card-name">Talos extensions</div><div class="card-desc">rbd · iscsi · GPU drivers<br>Built at factory.talos.dev pre-CAPI</div><span class="card-tag">extensions</span><span class="card-new">required</span></div>
+          <div class="card" onclick="openModal('infra-proxmox')"><div class="card-name">Proxmox VE</div><div class="card-desc">pvecm cluster · multi-host<br>Raw disks → Ceph OSDs</div></div>
+          <div class="card" onclick="openModal('infra-baremetal')"><div class="card-name">Bare-metal / VMware</div><div class="card-desc">PXE boot · IPMI/BMC · vCenter<br>Same Talos ISO · zero platform change</div><span class="card-tag">enterprise</span></div>
+        </div>
+        <div class="pfl" style="color:var(--virt);border-color:var(--virt);background:rgba(126,184,247,.03);margin-top:12px">CAPI · node lifecycle via Git</div>
+        <div class="cards cards-3 l-infra">
+          <div class="card" onclick="openModal('infra-capi')"><div class="card-name">CAPI</div><div class="card-desc">Cluster API · node lifecycle<br>Git commit = node provisioned</div><span class="card-tag">provisioning</span></div>
+          <div class="card" onclick="openModal('infra-cp-node')"><div class="card-name">Control plane nodes</div><div class="card-desc">controlplane.yaml · etcd · scheduler<br>Min 3 · dedicated · no workload pods</div><span class="card-tag">control-plane</span></div>
+          <div class="card" onclick="openModal('infra-worker')"><div class="card-name">Worker nodes</div><div class="card-desc">worker.yaml · kubelet · containerd<br>Pools: general · storage · kubevirt</div><span class="card-tag">worker</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 2: High Availability -->
+    <div class="layer l-ha collapsed" id="cp-l2" style="margin-top:8px">
+      <div class="layer-header" onclick="toggleLayer('cp-l2')">
+        <div class="layer-title-group">
+          <div class="layer-dot" style="background:var(--ha)"></div>
+          <span class="layer-name" style="color:var(--ha)">Layer 2 · High Availability · etcd · kube-vip · KubePrism · MetalLB</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ha);border:1px solid rgba(248,127,160,.3);padding:2px 7px;text-transform:uppercase">no single point of failure</span>
+          <span class="layer-toggle">▾</span>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="ldesc" style="border-color:rgba(248,127,160,.3)">HA is a property of the cluster, not a single component. Control plane: 3 etcd members for quorum. kube-vip for the management cluster API VIP (low load). MetalLB distributing to all 3 CP nodes for production workload clusters (high API load — Sidero warning: kube-vip alone serves only one CP node at a time). KubePrism mandatory on every node — keeps workers connected to the API server even if the external load balancer fails.</div>
+        <div class="scale-bar"><span class="sc p">Pilot: single CP — accepted risk</span><span class="sc g">Growth: 3 CP nodes · 2+ physical hosts</span><span class="sc e">Enterprise: 3 CP · MetalLB · etcd quorum · KubePrism</span></div>
+        <div class="pfl" style="color:var(--ha);border-color:var(--ha);background:rgba(248,127,160,.03);margin-top:0">Control plane HA · etcd quorum</div>
+        <div class="cards cards-4 l-ha">
+          <div class="card" onclick="openModal('ha-etcd')"><div class="card-name">etcd quorum</div><div class="card-desc">3 CP nodes · tolerates 1 failure<br>Quorum = 2/3 · Talos auto-manages</div><span class="card-tag">quorum</span></div>
+          <div class="card" onclick="openModal('ha-vip')"><div class="card-name">kube-vip</div><div class="card-desc">Management cluster API VIP<br>Low-load only — active/passive</div><span class="card-tag">load-balancing</span><span class="card-changed">mgmt only</span></div>
+          <div class="card" onclick="openModal('ha-metallb')"><div class="card-name">MetalLB</div><div class="card-desc">Workload clusters · L2/BGP<br>Distributes to ALL 3 CP nodes</div><span class="card-tag">load-balancing</span></div>
+          <div class="card" onclick="openModal('ha-kubeprism')"><div class="card-name">KubePrism</div><div class="card-desc">Per-node API LB · 127.0.0.1:7445<br>Workers reach API if external LB fails</div><span class="card-tag">resilience</span><span class="card-new">mandatory</span></div>
+        </div>
+        <div class="pfl" style="color:var(--ha);border-color:var(--ha);background:rgba(248,127,160,.03);margin-top:12px">Network HA · Cilium eBPF · ExternalDNS</div>
+        <div class="cards cards-3 l-ha">
+          <div class="card" onclick="openModal('ha-cilium-ha')"><div class="card-name">Cilium kube-proxy replacement</div><div class="card-desc">eBPF per node · no central proxy<br>Node loss does not affect routing</div><span class="card-tag">networking</span></div>
+          <div class="card" onclick="openModal('ha-externaldns')"><div class="card-name">ExternalDNS</div><div class="card-desc">Auto DNS records from Services<br>LoadBalancer + Ingress sync</div><span class="card-tag">dns</span></div>
+          <div class="card" onclick="openModal('ha-spread')"><div class="card-name">Failure domain spread</div><div class="card-desc">CP nodes on separate physical hosts<br>Host failure loses 1 of 3 — survives</div><span class="card-tag">topology</span></div>
+        </div>
+        <div class="pfl" style="color:var(--ha);border-color:var(--ha);background:rgba(248,127,160,.03);margin-top:12px">Management plane HA · replicated services</div>
+        <div class="cards cards-4 l-ha">
+          <div class="card" onclick="openModal('ha-argocd')"><div class="card-name">ArgoCD HA</div><div class="card-desc">3 app-controller replicas · Redis HA<br>No single pod dependency</div><span class="card-tag">gitops</span></div>
+          <div class="card" onclick="openModal('ha-vault')"><div class="card-name">Vault HA (Raft)</div><div class="card-desc">3 Vault nodes · integrated Raft storage<br>Active/standby · auto-unseal</div><span class="card-tag">secrets</span></div>
+          <div class="card" onclick="openModal('ha-keycloak')"><div class="card-name">Keycloak HA</div><div class="card-desc">2+ replicas · Infinispan session cache<br>CNPG HA backend</div><span class="card-tag">identity</span></div>
+          <div class="card" onclick="openModal('ha-pdb')"><div class="card-name">PodDisruptionBudgets</div><div class="card-desc">minAvailable:1 all management services<br>Safe node drain without service loss</div><span class="card-tag">resilience</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="plane-connector"></div>
+
+<!-- ══════════════════════════════════════════════
+     MANAGEMENT PLANE
+══════════════════════════════════════════════ -->
+<div class="plane plane-mp" style="animation-delay:.2s">
+  <div class="plane-header">
+    <div class="plane-title-group">
+      <div class="plane-dot" style="background:var(--idp)"></div>
+      <div>
+        <div class="plane-name">Management Plane</div>
+        <div class="plane-desc">Layers 3–8 · fixed · serves all workload clusters and deployment models · never runs tenant workloads</div>
+      </div>
+    </div>
+    <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--idp);border:1px solid rgba(52,212,160,.3);padding:3px 10px;text-transform:uppercase;letter-spacing:.1em">shared services · all clusters</span>
+  </div>
+  <div class="plane-body">
+
+    <!-- Layer 3: GitOps -->
+    <div class="layer l-gitops2 collapsed" id="mp-l3">
+      <div class="layer-header" onclick="toggleLayer('mp-l3')">
+        <div class="layer-title-group">
+          <div class="layer-dot" style="background:var(--gitops)"></div>
+          <span class="layer-name" style="color:var(--gitops)">Layer 3 · GitOps Bootstrap · ArgoCD · GitLab CE</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gitops);border:1px solid rgba(125,232,160,.3);padding:2px 7px;text-transform:uppercase">one imperative step · everything else GitOps</span>
+          <span class="layer-toggle">▾</span>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="ldesc" style="border-color:rgba(125,232,160,.3)">GitLab CE is installed first — before ArgoCD — so that internal Git exists from day one and ArgoCD points at it immediately with no external dependency ever. The correct Phase 03 order is: cert-manager → Rook-Ceph → CNPG → GitLab CE → push all manifests → ArgoCD. From the moment ArgoCD starts, it reads from internal GitLab. There is no temporary external repo and no migration. Reloader watches ConfigMaps and Secrets and triggers rolling restarts — the runtime complement to ArgoCD sync.</div>
+        <div class="pfl" style="color:var(--gitops);border-color:var(--gitops);background:rgba(125,232,160,.03);margin-top:0">ArgoCD · source of truth · automation</div>
+        <div class="cards cards-4 l-gitops2">
+          <div class="card" onclick="openModal('g-argocd')"><div class="card-name">ArgoCD Hub (HA)</div><div class="card-desc">App-of-Apps · multi-cluster · all vClusters<br>Drift detection · self-heal · audit trail</div><span class="card-tag">gitops</span></div>
+          <div class="card" onclick="openModal('g-gitlab')"><div class="card-name">GitLab CE</div><div class="card-desc">In-cluster · CNPG + Ceph RBD<br>Keycloak SSO · source of truth</div><span class="card-tag">git</span></div>
+          <div class="card" onclick="openModal('g-appset')"><div class="card-name">ApplicationSet</div><div class="card-desc">Git-dir generator per tenant<br>New YAML file = new cluster provisioned</div><span class="card-tag">automation</span></div>
+          <div class="card" onclick="openModal('g-reloader')"><div class="card-name">Reloader</div><div class="card-desc">ConfigMap + Secret watcher<br>Triggers rolling restart on change</div><span class="card-tag">runtime</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 4: Storage -->
+    <div class="layer l-stor collapsed" id="mp-l4" style="margin-top:8px">
+      <div class="layer-header" onclick="toggleLayer('mp-l4')">
+        <div class="layer-title-group">
+          <div class="layer-dot" style="background:var(--stor)"></div>
+          <span class="layer-name" style="color:var(--stor)">Layer 4 · Storage · Rook-Ceph · MinIO · Velero · CNPG</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--stor);border:1px solid rgba(94,232,216,.3);padding:2px 7px;text-transform:uppercase">distributed · no SPOF</span>
+          <span class="layer-toggle">▾</span>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="ldesc" style="border-color:rgba(94,232,216,.3)">Rook-Ceph is the primary storage layer. Ceph operates via the rbd kernel module (requires Talos extension baked into factory.talos.dev image — Day 0 requirement). A single Rook operator provides block (RBD), filesystem (CephFS), and object storage (RadosGW). MinIO complements Ceph for tenant-facing object storage and offsite replication. Dedicated storage nodes recommended to isolate rebalancing performance impact.</div>
+        <div class="scale-bar"><span class="sc p">Pilot: virtual Ceph OSDs on Proxmox VMs</span><span class="sc g">Growth: dedicated OSD disks per node</span><span class="sc e">Enterprise: dedicated storage nodes · 10 GbE</span></div>
+        <div class="pfl" style="color:var(--stor);border-color:var(--stor);background:rgba(94,232,216,.03);margin-top:0">Rook-Ceph · unified storage backend</div>
+        <div class="cards cards-4 l-stor">
+          <div class="card" onclick="openModal('stor-ceph')"><div class="card-name">Rook-Ceph operator</div><div class="card-desc">Full Ceph lifecycle via CRDs<br>MON · MGR · OSD · MDS managed</div><span class="card-tag">operator</span></div>
+          <div class="card" onclick="openModal('stor-rbd')"><div class="card-name">Ceph RBD (block)</div><div class="card-desc">Default StorageClass · RWO volumes<br>Kernel rbd module via Talos extension</div><span class="card-tag">block</span></div>
+          <div class="card" onclick="openModal('stor-cephfs')"><div class="card-name">CephFS (filesystem)</div><div class="card-desc">RWX StorageClass · multi-pod access<br>Nextcloud file store · shared configs</div><span class="card-tag">filesystem</span></div>
+          <div class="card" onclick="openModal('stor-rgw')"><div class="card-name">Ceph RadosGW</div><div class="card-desc">S3-compatible · Loki backend<br>Internal Velero target</div><span class="card-tag">object</span></div>
+        </div>
+        <div class="pfl" style="color:var(--stor);border-color:var(--stor);background:rgba(94,232,216,.03);margin-top:12px">MinIO · Velero · CNPG</div>
+        <div class="cards cards-4 l-stor">
+          <div class="card" onclick="openModal('stor-minio')"><div class="card-name">MinIO (distributed)</div><div class="card-desc">4-node erasure coding · HA<br>Per-tenant buckets · CNPG WAL</div><span class="card-tag">object</span></div>
+          <div class="card" onclick="openModal('stor-offsite')"><div class="card-name">Offsite replication</div><div class="card-desc">rclone → Hetzner / IONOS<br>EU-sovereign · BSI C5 · 3-2-1 rule</div><span class="card-tag">offsite</span></div>
+          <div class="card" onclick="openModal('stor-velero')"><div class="card-name">Velero</div><div class="card-desc">K8s state + CSI snapshots<br>Single instance covers all vClusters</div><span class="card-tag">backup</span></div>
+          <div class="card" onclick="openModal('stor-cnpg')"><div class="card-name">CNPG WAL archiving</div><div class="card-desc">Continuous PostgreSQL backup · PITR<br>Per-tenant MinIO bucket isolation</div><span class="card-tag">database</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 5: Secrets + Identity -->
+    <div class="layer l-id collapsed" id="mp-l5" style="margin-top:8px">
+      <div class="layer-header" onclick="toggleLayer('mp-l5')">
+        <div class="layer-title-group">
+          <div class="layer-dot" style="background:var(--id)"></div>
+          <span class="layer-name" style="color:var(--id)">Layer 5 · Secrets + Identity · Vault · ESO · Keycloak · cert-manager</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:2px 7px;text-transform:uppercase">shared services</span>
+          <span class="layer-toggle">▾</span>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="ldesc" style="border-color:rgba(197,157,255,.3)">Single Vault cluster and single Keycloak instance on the management plane serve all tenant clusters via Cilium Cluster Mesh. ESO runs a ClusterSecretStore per tenant, scoped to that tenant's Vault path only. Keycloak OIDC is configured directly on the Kubernetes API server — highly recommended for production by Sidero. Talos CCM enables automatic certificate rotation.</div>
+        <div class="cards cards-4 l-id">
+          <div class="card" onclick="openModal('id-vault')"><div class="card-name">Vault HA (Raft)</div><div class="card-desc">Single source of truth · all clusters<br>Per-tenant KV paths · least-privilege</div><span class="card-tag">secrets</span></div>
+          <div class="card" onclick="openModal('id-eso')"><div class="card-name">External Secrets Operator</div><div class="card-desc">ClusterSecretStore per tenant<br>ExternalSecret CRDs · Vault → K8s Secret</div><span class="card-tag">secrets</span></div>
+          <div class="card" onclick="openModal('id-keycloak')"><div class="card-name">Keycloak HA</div><div class="card-desc">OIDC SSO · all clusters + portal<br>Keycloak group → vCluster RBAC</div><span class="card-tag">identity</span></div>
+          <div class="card" onclick="openModal('id-certmanager')"><div class="card-name">cert-manager + Talos CCM</div><div class="card-desc">Webhook TLS · CNPG · ESO<br>Auto cert rotation via Talos CCM</div><span class="card-tag">tls</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 6: Observability -->
+    <div class="layer l-obs collapsed" id="mp-l6" style="margin-top:8px">
+      <div class="layer-header" onclick="toggleLayer('mp-l6')">
+        <div class="layer-title-group">
+          <div class="layer-dot" style="background:var(--obs)"></div>
+          <span class="layer-name" style="color:var(--obs)">Layer 6 · Observability · OTel · Prometheus / VictoriaMetrics · Loki · Grafana · Hubble</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:2px 7px;text-transform:uppercase">all tenants · one stack</span>
+          <span class="layer-toggle">▾</span>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="ldesc" style="border-color:rgba(255,208,128,.3)">Single observability stack covers all tenant clusters automatically. OpenTelemetry Collector is the unified ingestion point — workloads instrument once against the OTel SDK, collector handles routing to Prometheus/Loki/Tempo. Prometheus for small/few clusters; VictoriaMetrics for large multi-cluster deployments (Sidero recommendation). Per-tenant log labels and per-namespace Hubble flows give tenants visibility without cross-tenant leakage.</div>
+        <div class="scale-bar"><span class="sc p">Small: Prometheus · Loki · Grafana</span><span class="sc e">Large multi-cluster: VictoriaMetrics · VictoriaLogs</span></div>
+        <div class="pfl" style="color:var(--obs);border-color:var(--obs);background:rgba(255,208,128,.03);margin-top:0">Telemetry ingestion + metrics + logs</div>
+        <div class="cards cards-4 l-obs">
+          <div class="card" onclick="openModal('obs-otel')"><div class="card-name">OTel Collector</div><div class="card-desc">Unified ingestion · traces · metrics · logs<br>Fan-out to Prometheus · Loki · Tempo</div><span class="card-tag">telemetry</span></div>
+          <div class="card" onclick="openModal('obs-prometheus')"><div class="card-name">Prometheus / VictoriaMetrics</div><div class="card-desc">kube-prometheus-stack · all nodes<br>VictoriaMetrics at scale (Sidero rec)</div><span class="card-tag">metrics</span></div>
+          <div class="card" onclick="openModal('obs-loki')"><div class="card-name">Loki / VictoriaLogs</div><div class="card-desc">Host DaemonSet · all cluster pods<br>Per-tenant labels · Ceph S3 backend</div><span class="card-tag">logs</span></div>
+          <div class="card" onclick="openModal('obs-grafana')"><div class="card-name">Grafana</div><div class="card-desc">Unified dashboards · Keycloak SSO<br>Ceph dashboard · tenant resource view</div><span class="card-tag">dashboards</span></div>
+        </div>
+        <div class="pfl" style="color:var(--obs);border-color:var(--obs);background:rgba(255,208,128,.03);margin-top:12px">Network visibility + alerting + uptime</div>
+        <div class="cards cards-3 l-obs">
+          <div class="card" onclick="openModal('obs-hubble')"><div class="card-name">Cilium Hubble</div><div class="card-desc">Network flow visibility per namespace<br>Dropped packets · policy violations</div><span class="card-tag">network</span></div>
+          <div class="card" onclick="openModal('obs-alertmanager')"><div class="card-name">Alertmanager</div><div class="card-desc">Namespace-based routing per tenant<br>Platform alerts · Slack / PagerDuty</div><span class="card-tag">alerting</span></div>
+          <div class="card" onclick="openModal('obs-uptime')"><div class="card-name">Uptime Kuma</div><div class="card-desc">Endpoint availability · all clusters<br>SLI signal for availability SLOs</div><span class="card-tag">uptime</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 7: Security -->
+    <div class="layer l-sec collapsed" id="mp-l7" style="margin-top:8px">
+      <div class="layer-header" onclick="toggleLayer('mp-l7')">
+        <div class="layer-title-group">
+          <div class="layer-dot" style="background:var(--sec)"></div>
+          <span class="layer-name" style="color:var(--sec)">Layer 7 · Security · Kyverno · Harbor · Falco · Cilium · Headscale · kube-bench · Kubescape</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--sec);border:1px solid rgba(255,112,150,.3);padding:2px 7px;text-transform:uppercase">BSI IT-Grundschutz</span>
+          <span class="layer-toggle">▾</span>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="ldesc" style="border-color:rgba(255,112,150,.3)">Four security layers enforced at platform level — all clusters inherit automatically. Kyverno replaces Pod Security Standards: does everything PSS does plus image signature verification against Harbor, mutation policies, and generate policies (auto-create NetworkPolicy on namespace creation). Talos Ingress Firewall adds OS-level default-deny for internet-facing clusters. Headscale WireGuard replaces Cloudflare Tunnel — full EU data sovereignty, BSI IT-Grundschutz compliant.</div>
+        <div class="pfl" style="color:var(--sec);border-color:var(--sec);background:rgba(255,112,150,.03);margin-top:0">Policy enforcement + runtime security</div>
+        <div class="cards cards-4 l-sec">
+          <div class="card" onclick="openModal('sec-kyverno')"><div class="card-name">Kyverno</div><div class="card-desc">Replaces PSS · policy · mutate<br>Image signature verification</div><span class="card-tag">policy</span></div>
+          <div class="card" onclick="openModal('sec-harbor')"><div class="card-name">Harbor</div><div class="card-desc">OCI registry · image signing<br>Cosign/Notary · Kyverno integration</div><span class="card-tag">registry</span></div>
+          <div class="card" onclick="openModal('sec-falco')"><div class="card-name">Falco</div><div class="card-desc">Host DaemonSet · all workloads<br>eBPF probe · Talos-compatible</div><span class="card-tag">runtime</span></div>
+          <div class="card" onclick="openModal('sec-netpol')"><div class="card-name">CiliumNetworkPolicy</div><div class="card-desc">Default-deny per tenant namespace<br>Auto-applied by provisioning template</div><span class="card-tag">network</span></div>
+        </div>
+        <div class="pfl" style="color:var(--sec);border-color:var(--sec);background:rgba(255,112,150,.03);margin-top:12px">Edge + compliance scanners + OS firewall</div>
+        <div class="cards cards-4 l-sec">
+          <div class="card" onclick="openModal('sec-headscale')"><div class="card-name">Headscale WireGuard</div><div class="card-desc">Self-hosted · EU sovereign<br>BSI IT-Grundschutz · no inbound ports</div><span class="card-tag">edge</span></div>
+          <div class="card" onclick="openModal('sec-talos-fw')"><div class="card-name">Talos Ingress Firewall</div><div class="card-desc">OS-level default-deny<br>Internet-facing clusters · zero-trust</div><span class="card-tag">os-firewall</span></div>
+          <div class="card" onclick="openModal('sec-kubebench')"><div class="card-name">kube-bench + Kubescape</div><div class="card-desc">CIS benchmark · RBAC posture<br>NSA/MITRE · GitLab CI scheduled</div><span class="card-tag">compliance</span></div>
+          <div class="card" onclick="openModal('sec-gitleaks')"><div class="card-name">Gitleaks</div><div class="card-desc">Secret scan · pre-build CI gate<br>Blocks pipeline on detection</div><span class="card-tag">secret-scan</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 8: CI/CD Platform -->
+    <div class="layer l-ci collapsed" id="mp-l8" style="margin-top:8px">
+      <div class="layer-header" onclick="toggleLayer('mp-l8')">
+        <div class="layer-title-group">
+          <div class="layer-dot" style="background:var(--ci)"></div>
+          <span class="layer-name" style="color:var(--ci)">Layer 8 · CI/CD Platform · GitLab Runner · Harbor · Renovate · Karmada</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:2px 7px;text-transform:uppercase">image supply chain</span>
+          <span class="layer-toggle">▾</span>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="ldesc" style="border-color:rgba(255,184,108,.3)">The CI security gate chain runs in strict order: Gitleaks (pre-build secret scan) → build → Trivy CVE scan (fail on Critical) → Harbor push + Cosign sign → Kyverno admission verify. Renovate watches Harbor image digests and Helm chart repos, opening MRs automatically when updates are available. Karmada adds multi-cluster workload scheduling above ArgoCD — needed only for active-active DR or capacity-aware placement across 10+ clusters.</div>
+        <div class="pfl" style="color:var(--ci);border-color:var(--ci);background:rgba(255,184,108,.03);margin-top:0">CI pipeline · security gate order: Gitleaks → build → Trivy → Harbor → Kyverno</div>
+        <div class="cards cards-4 l-ci">
+          <div class="card" onclick="openModal('ci-runner')"><div class="card-name">GitLab Runner</div><div class="card-desc">Kubernetes executor · ephemeral pods<br>Image promotion pipeline</div><span class="card-tag">ci/cd</span></div>
+          <div class="card" onclick="openModal('ci-trivy')"><div class="card-name">Trivy CVE gate</div><div class="card-desc">Scan on every build · fail on Critical<br>Blocks push to Harbor</div><span class="card-tag">security</span></div>
+          <div class="card" onclick="openModal('ci-renovate')"><div class="card-name">Renovate</div><div class="card-desc">Dependency MR bot · Helm + images<br>Opens MR → pipeline re-runs</div><span class="card-tag">automation</span></div>
+          <div class="card" onclick="openModal('ci-karmada')"><div class="card-name">Karmada</div><div class="card-desc">Multi-cluster scheduling · PropagationPolicy<br>Add only for active-active DR · 10+ clusters</div><span class="card-tag">multi-cluster</span><span class="card-new">conditional</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="plane-connector"></div>
+
+<!-- ══════════════════════════════════════════════
+     WORKLOAD PLANE
+══════════════════════════════════════════════ -->
+<div class="plane plane-wp" style="animation-delay:.3s">
+  <div class="plane-header">
+    <div class="plane-title-group">
+      <div class="plane-dot" style="background:var(--obs)"></div>
+      <div>
+        <div class="plane-name">Workload Plane</div>
+        <div class="plane-desc">Layer 9 · five deployment models · this is the only plane that changes per use case</div>
+      </div>
+    </div>
+    <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--obs);border:1px solid rgba(255,208,128,.3);padding:3px 10px;text-transform:uppercase;letter-spacing:.1em">Git is the only interface</span>
+  </div>
+  <div class="plane-body">
+
+    <!-- Layer 9 header -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="width:7px;height:7px;border-radius:50%;background:var(--obs);flex-shrink:0"></div>
+      <span style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--obs)">Layer 9 · Deployment Models</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:2px 7px;text-transform:uppercase;margin-left:auto">CAPI provisions · ArgoCD deploys · Vault delivers · Keycloak SSO · Headscale connects · all five models</span>
+    </div>
+
+    <div class="ldesc" style="border-color:rgba(255,208,128,.3);margin-bottom:14px">One management plane manages all five deployment models. The Git directory structure is the single interface regardless of model. Add a file → platform provisions it. Remove a file → platform decommissions it. Vault, Keycloak, Observability stack, and Falco serve all five models from the management plane with zero per-model duplication.</div>
+
+    <!-- Five models -->
+    <div class="models-grid">
+
+      <!-- Model 1 -->
+      <div class="model-card model-1" onclick="openModal('m1')">
+        <div class="model-num">Model 1</div>
+        <div class="model-title">vCluster IDP</div>
+        <div class="model-subtitle">Self-service developer environments · shared host cluster</div>
+        <div class="model-tags">
+          <span class="model-tag">team dev</span>
+          <span class="model-tag">staging</span>
+          <span class="model-tag">testing</span>
+        </div>
+        <div class="model-diff">
+          <span>Virtual API server per team</span>
+          <span>S / M / L resource tiers</span>
+          <span>Sleep · scale-to-zero</span>
+          <span>Backstage portal provisioning</span>
+        </div>
+        <div class="model-git">clusters/tenants/*.yaml</div>
+      </div>
+
+      <!-- Model 2 -->
+      <div class="model-card model-2" onclick="openModal('m2')">
+        <div class="model-num">Model 2</div>
+        <div class="model-title">Mission Critical</div>
+        <div class="model-subtitle">Dedicated cluster per certified workload · IEC 62443</div>
+        <div class="model-tags">
+          <span class="model-tag">SCADA / OT</span>
+          <span class="model-tag">IEC 62443</span>
+          <span class="model-tag">railway</span>
+        </div>
+        <div class="model-diff">
+          <span>Dedicated HW + own etcd</span>
+          <span>Own K8s version lifecycle</span>
+          <span>CAB-governed changes</span>
+          <span>Certification boundary</span>
+        </div>
+        <div class="model-git">clusters/dedicated/*.yaml</div>
+      </div>
+
+      <!-- Model 3 -->
+      <div class="model-card model-3" onclick="openModal('m3')">
+        <div class="model-num">Model 3</div>
+        <div class="model-title">Large Microservices</div>
+        <div class="model-subtitle">Zalando-scale · one prod cluster per domain · namespace per team</div>
+        <div class="model-tags">
+          <span class="model-tag">100s of services</span>
+          <span class="model-tag">multi-team</span>
+          <span class="model-tag">high deploy rate</span>
+        </div>
+        <div class="model-diff">
+          <span>Dedicated prod+nonprod pair per domain</span>
+          <span>Namespace per team inside cluster</span>
+          <span>Cilium L7 between namespaces</span>
+          <span>AppSet per service directory</span>
+        </div>
+        <div class="model-git">clusters/dedicated/*.yaml</div>
+      </div>
+
+      <!-- Model 4 -->
+      <div class="model-card model-4" onclick="openModal('m4')">
+        <div class="model-num">Model 4</div>
+        <div class="model-title">KubeEdge</div>
+        <div class="model-subtitle">Factory floors · substations · remote OT sites</div>
+        <div class="model-tags">
+          <span class="model-tag">factory / OT</span>
+          <span class="model-tag">substation</span>
+          <span class="model-tag">edge</span>
+        </div>
+        <div class="model-diff">
+          <span>No cluster on device</span>
+          <span>EdgeCore · outbound only</span>
+          <span>OPC-UA · Modbus · DeviceTwin</span>
+          <span>SecureBoot + TPM</span>
+        </div>
+        <div class="model-git">edge/sites/*.yaml</div>
+      </div>
+
+      <!-- Model 5 -->
+      <div class="model-card model-5" onclick="openModal('m5')">
+        <div class="model-num">Model 5</div>
+        <div class="model-title">KubeVirt</div>
+        <div class="model-subtitle">Legacy VM migration · SAP · ERP · Windows Server</div>
+        <div class="model-tags">
+          <span class="model-tag">legacy VM</span>
+          <span class="model-tag">SAP / ERP</span>
+          <span class="model-tag">migration path</span>
+        </div>
+        <div class="model-diff">
+          <span>VirtualMachine CRD in Git</span>
+          <span>QEMU/KVM · Ceph RBD PVC</span>
+          <span>Forklift import · VMware/oVirt</span>
+          <span>Multus CNI on kubevirt pool</span>
+        </div>
+        <div class="model-git">vms/workloads/*.yaml</div>
+      </div>
+
+    </div>
+
+    <!-- Git interface bar -->
+    <div class="git-bar">
+      <div class="git-path">
+        <div class="git-path-key">Model 1 · vCluster IDP</div>
+        <div class="git-path-val">clusters/tenants/*.yaml</div>
+      </div>
+      <div class="git-path">
+        <div class="git-path-key">Model 2 + 3 · dedicated clusters</div>
+        <div class="git-path-val">clusters/dedicated/*.yaml</div>
+      </div>
+      <div class="git-path">
+        <div class="git-path-key">Model 4 · edge sites</div>
+        <div class="git-path-val">edge/sites/*.yaml</div>
+      </div>
+      <div class="git-path">
+        <div class="git-path-key">Model 5 · legacy VMs</div>
+        <div class="git-path-val">vms/workloads/*.yaml</div>
+      </div>
+    </div>
+    <div class="pipe-note" style="margin-top:0;border-top:none">
+      <span style="color:var(--obs)">Git is the only interface —</span> Add a YAML file → platform provisions it. Remove a file → platform decommissions it. CAPI provisions nodes, ArgoCD deploys workloads, Vault delivers secrets, Keycloak provides SSO, Headscale connects edge. Same management plane serves all five models.
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <a href="https://mmrajput.github.io/project-portfolio" target="_blank">mmrajput.github.io/project-portfolio</a>
+  &nbsp;·&nbsp;
+  <span style="color:var(--dim)">Validated against Sidero Talos Linux Reference Architecture 2025-05</span>
+</footer>
+
+</div><!-- .page -->
+
+<!-- ── OVERLAY + MODAL ── -->
+<div class="overlay" id="overlay" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <div class="mlt" id="m-layer"></div>
+  <div class="mti" id="m-title"></div>
+  <div class="ms"><div class="mst">Overview</div><div class="mt" id="m-desc"></div></div>
+  <div class="ms"><div class="mst">Implementation detail</div><div class="mt" id="m-detail"></div></div>
+  <div class="ms"><div class="mst">Components / tools</div><div class="tr" id="m-tags"></div></div>
+</div>
+
+<script>
+function toggleLayer(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('collapsed');
+  el.classList.toggle('open');
+}
+function openModal(id){
+  const d=M[id];if(!d)return;
+  document.getElementById('m-layer').textContent=d.l;
+  document.getElementById('m-layer').style.color=d.c||'var(--muted)';
+  document.getElementById('m-title').textContent=d.t;
+  document.getElementById('m-title').style.color=d.c||'var(--text)';
+  document.getElementById('m-desc').innerHTML=d.d;
+  document.getElementById('m-detail').innerHTML=d.i;
+  document.getElementById('m-tags').innerHTML=d.g.map(t=>`<span class="mtag">${t}</span>`).join('');
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+const M={
+/* ── BOOTSTRAP PHASES ── */
+"bp1":{l:"Bootstrap · Phase 01 · Imperative",t:"Bare metal prep · Proxmox VE",c:"var(--virt)",
+  d:"This platform is infrastructure-agnostic above Layer 1 — the same architecture runs identically on VMware, bare-metal PXE, or any cloud provider without changing a single layer above the hypervisor. For this implementation, Proxmox VE is the chosen hypervisor. It is installed on each physical host from a USB ISO and joined into a pvecm cluster. The hosts are then prepared with bridge networking and raw disks attached to future storage nodes so Rook-Ceph can claim them as OSDs. This phase has nothing to do with Kubernetes yet — it is purely infrastructure preparation. Swap Proxmox for VMware vCenter or a PXE boot server and everything from Phase 02 onward remains unchanged.",
+  i:"Install Proxmox VE on each physical host. Join additional hosts: Datacenter → Cluster → Join. Network bridge: create <code>vmbr0</code> on each host mapped to the physical NIC — all Talos VMs will use this bridge. Raw disk attachment: add a raw disk image (type: RAW, no pre-allocation) to each storage VM — Rook detects any disk with no filesystem signature automatically. Verify: <code>pvecm status</code> shows all hosts as online nodes. Three physical hosts minimum for production failure domain spread — losing one host must not take more than one CP node or one OSD node offline.",
+  g:["Proxmox VE ISO install (each host)","pvecm cluster join","vmbr0 bridge (VM networking)","Raw disk attachment (Ceph OSDs)","pvecm status — verify all hosts online"]},
+
+"bp2":{l:"Bootstrap · Phase 02 · Imperative · One-time only",t:"Management cluster bootstrap · 9 nodes · 3 Proxmox hosts",c:"var(--virt)",
+  d:"The only Kubernetes cluster ever created manually. Every other cluster — workload clusters, dedicated clusters, edge clusters — is provisioned by CAPI from Git. This cluster is the brain of the entire platform: it runs ArgoCD, Vault, Keycloak, Prometheus, GitLab, and Rook-Ceph. It never runs tenant workloads. Nine nodes across three Proxmox hosts: 3 dedicated CP nodes for etcd quorum, 3 dedicated worker nodes for platform services, 3 dedicated storage nodes for Ceph OSDs. Each role is isolated by Talos taints — nothing lands where it should not.",
+  i:"Node layout: 1 CP + 1 worker + 1 storage per Proxmox host — a single host failure loses exactly one node of each type, cluster survives. Commands in order: <code>talosctl gen secrets -o secrets.yaml</code> (separate secrets from config — Sidero requirement), then <code>talosctl gen config --with-secrets secrets.yaml mgmt-cluster https://VIP:6443</code>. Apply to CP nodes: <code>talosctl apply-config --nodes CP1_IP --file controlplane.yaml</code>. Bootstrap etcd on first CP only: <code>talosctl bootstrap --nodes CP1_IP</code>. Apply worker config to remaining nodes. Verify: <code>kubectl get nodes</code> shows 9 nodes, 3 with control-plane taint.",
+  g:["talosctl gen secrets -o secrets.yaml","talosctl gen config --with-secrets","talosctl apply-config (CP nodes first)","talosctl bootstrap (first CP only)","9 nodes · 3 CP · 3 worker · 3 storage"]},
+
+"bp3":{l:"Bootstrap · Phase 03 · Imperative · Last bulk install",t:"Core platform services · GitLab first · ArgoCD second",c:"var(--virt)",
+  d:"GitLab CE is installed before ArgoCD — this is the key sequencing decision. GitLab must exist first so that ArgoCD has an internal Git repo to point at from its very first moment. This means Git is the source of truth from day one, with no external dependency ever. Everything in this phase is installed imperatively with direct Helm commands in strict dependency order.",
+  i:"Strict install order: (1) <code>helm install cert-manager</code> — required first, GitLab webhook endpoints need TLS at install time or the Helm install fails. (2) <code>helm install rook-ceph</code> (operator + minimal CephCluster) — provides Ceph RBD StorageClass for GitLab Gitaly PVC. (3) <code>helm install cnpg</code> — provides PostgreSQL for GitLab database. (4) <code>helm install gitlab</code> — now has storage and database available, comes up fully backed by CNPG and Ceph RBD. (5) Push all platform manifests to internal GitLab — Git is now the source of truth. (6) <code>helm install argocd</code> — configure repo Secret pointing at internal GitLab immediately. ArgoCD reads from internal Git from its first sync. No external GitHub, no temporary repo, no migration ever needed.",
+  g:["helm install cert-manager (step 1 — TLS webhooks)","helm install rook-ceph (step 2 — Gitaly storage)","helm install cnpg (step 3 — GitLab DB)","helm install gitlab (step 4 — internal Git)","helm install argocd (step 5 — points at GitLab)"]},
+
+"bp4":{l:"Bootstrap · Phase 04 · Pivot · Last manual step ever",t:"CAPI install + GitOps pivot · the point of no return",c:"var(--sec)",
+  d:"This is the architectural pivot — the single most important phase in the entire bootstrap. Before this phase: platform engineer apply things manually. After this phase: Git is the only interface and never run kubectl apply or helm install again. CAPI is initialised, a Talos node template is created in Proxmox from the custom factory.talos.dev image (with required extensions: rbd, iscsi), and the first cluster manifests are committed to GitLab. ArgoCD picks them up and CAPI provisions the nodes. The platform is now self-managing.",
+  i:"(1) <code>clusterctl init --infrastructure proxmox --bootstrap talos --control-plane talos</code> — installs CAPI controllers. (2) Create Talos VM template in Proxmox: boot VM from custom factory.talos.dev ISO (with rbd + iscsi extensions baked in), convert to template. This template is what CAPI clones for every future node. (3) Commit Cluster manifests to GitLab: <code>clusters/dedicated/workload-01.yaml</code> containing Cluster, TalosControlPlane, ProxmoxMachineTemplate CRDs. (4) ArgoCD detects the new file, syncs, CAPI provisions nodes automatically. From this point: adding a cluster = adding a YAML file. Removing a cluster = deleting a YAML file. No exceptions.",
+  g:["clusterctl init --infrastructure proxmox","factory.talos.dev custom image (rbd + iscsi)","Proxmox VM template from custom ISO","Cluster + TalosControlPlane CRDs committed","ArgoCD auto-sync picks up immediately"]},
+
+"bp5":{l:"Bootstrap · Phase 05 · Full GitOps · No manual steps",t:"Full platform via GitOps · Git is the only interface",c:"var(--idp)",
+  d:"The platform is now fully self-managing. No platform engineer ever runs kubectl apply, helm install, or talosctl apply-config again for any cluster or workload. CAPI provisions all nodes in response to Cluster manifests in Git. ArgoCD deploys all platform services and tenant workloads. Vault delivers all secrets. Keycloak provides SSO. The five deployment models are now live: vCluster IDP for developer environments, dedicated clusters for mission-critical workloads, large production clusters for microservices, KubeEdge for factory floors, and KubeVirt for legacy VM migration. Git is the only interface — add a file to provision, remove a file to decommission.",
+  i:"What GitOps manages from this point: <code>clusters/tenants/*.yaml</code> → vCluster IDP (Model 1). <code>clusters/dedicated/*.yaml</code> → dedicated clusters (Models 2 + 3). <code>edge/sites/*.yaml</code> → KubeEdge sites (Model 4). <code>vms/workloads/*.yaml</code> → KubeVirt VMs (Model 5). ApplicationSet git-dir generator watches each directory — new file = new Application created = CAPI or Helm provisions the resource. Deletion with ArgoCD finalizer cascades cleanly. Day-2 operations: Talos OS upgrades via <code>talosctl upgrade</code> (A/B image swap, atomic), Kubernetes upgrades via CAPI cluster manifest version bump committed to Git.",
+  g:["clusters/tenants/*.yaml (vCluster IDP)","clusters/dedicated/*.yaml (dedicated)","edge/sites/*.yaml (KubeEdge)","vms/workloads/*.yaml (KubeVirt)","Add file = provision · Remove file = decommission"]},
+
+/* ── LAYER 1: INFRASTRUCTURE ── */
+"infra-talos":{l:"Layer 1 · Infrastructure",t:"Talos Linux",c:"var(--virt)",
+  d:"Immutable API-driven Linux OS purpose-built for Kubernetes. No SSH, no shell, no package manager. Under 50 binaries. Identical image on every node — a Proxmox VM or a bare-metal server. Role (control plane vs worker) is determined solely by which machine config YAML is applied via talosctl.",
+  i:"Read-only root filesystem. All config via Talos API port 50000. <code>talosctl gen secrets</code> first (separate secrets from config), then <code>talosctl gen config --with-secrets secrets.yaml</code>. Upgrades are atomic A/B image swaps — succeed and boot into new release, or fail and revert. Never a broken state. Aligns with BSI IT-Grundschutz hardened OS requirements by design.",
+  g:["talosctl gen secrets","talosctl gen config --with-secrets","talosctl apply-config","talosctl bootstrap","Immutable root filesystem","API port 50000 only","A/B boot system"]},
+
+"infra-ext":{l:"Layer 1 · Infrastructure · Day 0 requirement",t:"Talos extensions · factory.talos.dev",c:"var(--virt)",
+  d:"Talos Linux includes fewer than 50 binaries by default — hardware drivers, storage modules, and security features must be explicitly included in a custom installer image. This is a Day 0 provisioning requirement: the Talos VM template that CAPI uses must be built from this custom image, not the stock ISO.",
+  i:"Required extensions for this platform: <code>siderolabs/rbd</code> (Rook-Ceph block storage), <code>siderolabs/iscsi-tools</code> (iSCSI), <code>siderolabs/util-linux-tools</code>. Optional: <code>siderolabs/nvidia-*</code> (GPU nodes), <code>siderolabs/gvisor</code> (sandboxed containers), <code>siderolabs/kata-containers</code> (VM-level isolation). Build at factory.talos.dev — produces a custom ISO/installer image. Include this image in your CAPI Talos VM template. Without rbd extension, Rook-Ceph fails silently at OSD creation.",
+  g:["factory.talos.dev (image builder)","siderolabs/rbd (required for Ceph)","siderolabs/iscsi-tools","CAPI VM template uses custom image","Day 0 — before any node provisioning"]},
+
+"infra-proxmox":{l:"Layer 1 · Infrastructure",t:"Proxmox VE",c:"var(--virt)",
+  d:"The hypervisor used to demonstrate the platform. Proxmox is the vehicle, not the destination — it provides a convenient way to run multiple Talos VMs on a single physical machine. Any company with existing VMware, Hyper-V, or cloud infrastructure uses that instead with zero platform change above Layer 1.",
+  i:"pvecm cluster (multi-host): join additional Proxmox nodes via Datacenter → Cluster → Join. For Ceph: attach a raw disk image (no filesystem, no partition table) to each VM — Rook detects it automatically. When adding a new physical machine: install Proxmox → join pvecm → create Talos VM → CAPI detects and provisions. Platform layers 2–9 never change.",
+  g:["Proxmox VE (KVM-based)","pvecm cluster (multi-host)","Raw disk image (Ceph OSD)","Talos ISO boot per VM","CAPI Proxmox provider"]},
+
+"infra-baremetal":{l:"Layer 1 · Infrastructure",t:"Bare-metal / VMware / Cloud",c:"var(--virt)",
+  d:"The platform is infrastructure-agnostic above Layer 1. VMware: provision VMs via vCenter, boot Talos ISO, apply machine config — identical bootstrap. Bare-metal: PXE-boot servers receive machine config from Git on first boot via Sidero Metal. Cloud: any provider (Hetzner, AWS, Azure, GCP) — spin up VMs, boot Talos, apply config.",
+  i:"VMware: CAPI vSphere provider. Bare-metal: Sidero Metal (IPXE + machine config server). Cloud: CAPI provider per cloud. All paths: same talosctl commands, same machine config format, same Talos image (with required extensions). The platform from Layer 2 upward does not change. A Mittelstand company with 10-year-old VMware runs the identical Kubernetes platform as a greenfield bare-metal deployment.",
+  g:["CAPI vSphere provider (VMware)","Sidero Metal (bare-metal PXE)","CAPI providers: AWS/Azure/Hetzner","Same machine config format all paths","Zero platform change above Layer 1"]},
+
+"infra-capi":{l:"Layer 1 · Infrastructure",t:"Cluster API (CAPI)",c:"var(--virt)",
+  d:"CAPI manages the full lifecycle of Kubernetes cluster nodes declaratively. Adding a node is a Git commit. Removing a node is a Git commit. CAPI reconciles the desired state against the actual state continuously. The CAPI provider is the only infrastructure-specific component — swap the provider, rest of the platform is identical.",
+  i:"<code>clusterctl init --infrastructure proxmox</code> installs CAPI controllers in the management cluster. Cluster manifest: <code>Cluster</code>, <code>TalosControlPlane</code>, <code>ProxmoxMachineTemplate</code> CRDs. CAPI watches for Cluster objects and provisions VMs. On new physical host addition: add Proxmox node to pvecm → commit updated node pool size → CAPI provisions new Talos VMs automatically.",
+  g:["clusterctl init --infrastructure proxmox","Cluster CRD","TalosControlPlane CRD","ProxmoxMachineTemplate CRD","Bootstrap provider: Talos (CABPT)"]},
+
+"infra-cp-node":{l:"Layer 1 · Infrastructure",t:"Control plane nodes",c:"var(--virt)",
+  d:"Talos Linux taints control plane nodes by default — no workload pods can be scheduled here. This prevents workloads from starving control plane processes and eliminates a class of privilege escalation attacks. Never override this. Size: minimum 8 GB RAM, 4 cores, 40 GB disk for under 100 worker nodes.",
+  i:"Sidero guidance: do not allow workloads on CP nodes. CP sizing: <100 workers: 8 GB / 4 cores / 40 GB. >100 workers: 32 GB / 8 cores / 40 GB. Scale up when memory or CPU exceeds 60% — provide headroom for API server spikes. The management cluster CP handles ArgoCD reconciliation loops, CAPI controller calls, and Vault/Keycloak API calls — size accordingly.",
+  g:["controlplane.yaml machine config","etcd (3-node quorum)","kube-apiserver","kube-scheduler","kube-controller-manager","No workload pods (Talos default taint)"]},
+
+"infra-worker":{l:"Layer 1 · Infrastructure",t:"Worker node pools",c:"var(--virt)",
+  d:"Worker nodes run all platform and tenant workloads. Node pools separate workload types using taints and labels: general workloads, dedicated storage nodes (Rook-Ceph OSD isolation), and KubeVirt nodes (KVM required). Dedicated storage nodes prevent Ceph rebalancing operations from impacting application performance.",
+  i:"Node pool taints: storage nodes: <code>node-role.kubernetes.io/storage:NoSchedule</code>. KubeVirt nodes: <code>workload-type=kubevirt:NoSchedule</code>. Storage node sizing: NVMe preferred, multiple raw disks per node, 10 GbE NIC. KubeVirt nodes: KVM hardware virtualization required, nested virt must be tested if workers are themselves VMs — bare-metal preferred for sustained VM density.",
+  g:["worker.yaml machine config","General pool (platform + tenant workloads)","Storage pool (Ceph OSDs · dedicated)","KubeVirt pool (KVM · tainted)","10 GbE NIC (storage nodes)"]},
+
+/* ── LAYER 2: HA ── */
+"ha-etcd":{l:"Layer 2 · High Availability",t:"etcd quorum (3 nodes)",c:"var(--ha)",
+  d:"3 control plane nodes minimum for etcd quorum. Cluster tolerates loss of 1 CP node — quorum = 2 of 3. Talos Linux auto-manages etcd membership. Nodes must be spread across separate physical hosts (failure domain spread) — a single physical host failure must never take out more than 1 CP node.",
+  i:"Talos manages etcd lifecycle automatically — no manual etcd operations. Do not run 2 CP nodes (no quorum if 1 fails) or 4 (same fault tolerance as 3, more cost). etcd storage: Talos stores etcd data in <code>/var/lib/etcd</code> on the system disk — not a separate OSD. For large clusters: monitor etcd latency metrics; high latency = CP instability regardless of CPU/RAM headroom.",
+  g:["3 CP nodes minimum","etcd quorum = 2/3","Talos auto-manages membership","Separate physical hosts per CP node","Monitor etcd_disk_wal_fsync_duration_seconds"]},
+
+"ha-vip":{l:"Layer 2 · High Availability · Sidero: conditional use",t:"kube-vip · management cluster only",c:"var(--ha)",
+  d:"kube-vip provides a virtual IP for the Kubernetes API server — the single endpoint that survives CP node loss. IMPORTANT: Sidero explicitly warns against using kube-vip for clusters with high external API load — it operates in active/passive mode, meaning only one CP node receives all requests at any time. Use kube-vip only for the management cluster (low API load).",
+  i:"Management cluster API load: ArgoCD reconciliation loops, talosctl, platform operator calls — manageable for a single CP node. Production workload clusters receive API calls from 100s of kubelet heartbeats, CI/CD pipeline deploys, HPA queries, custom controllers — requires MetalLB distributing to ALL 3 CP nodes. kube-vip config: <code>controlplane.yaml</code> vipIP field. Leader election via ARP/BGP.",
+  g:["kube-vip (management cluster only)","Virtual IP via leader election","ARP or BGP mode","Active/passive — one node receives","MetalLB for high-load workload clusters"]},
+
+"ha-metallb":{l:"Layer 2 · High Availability",t:"MetalLB · workload cluster load balancing",c:"var(--ha)",
+  d:"MetalLB provides true load balancing for the Kubernetes API server in production workload clusters, distributing requests across all three CP nodes. This is the Sidero-recommended approach when API load is high — unlike kube-vip, all CP nodes actively receive traffic.",
+  i:"MetalLB L2 mode: responds to ARP for the VIP, rotating the active node per ECMP or round-robin. MetalLB BGP mode: preferred for large environments — advertises the VIP to an upstream router which distributes across all endpoints. Deploy MetalLB in the workload cluster via ArgoCD. IPAddressPool CRD defines the VIP range. L2Advertisement or BGPAdvertisement CRD selects the mode.",
+  g:["MetalLB L2 or BGP mode","IPAddressPool CRD","L2Advertisement / BGPAdvertisement","Distributes to ALL 3 CP nodes","Deployed via ArgoCD in workload clusters"]},
+
+"ha-kubeprism":{l:"Layer 2 · High Availability · Mandatory",t:"KubePrism · per-node API server proxy",c:"var(--ha)",
+  d:"KubePrism is a per-node local load balancer for the Kubernetes API server, built into Talos Linux. It listens on 127.0.0.1:7445 on every node and load-balances to all healthy CP nodes directly. Sidero mandates this be enabled and never overridden — it keeps workers connected to the API server even when the external LB is unavailable.",
+  i:"KubePrism is enabled by default in Talos. Verify it is not disabled: check machine config for <code>machine.features.kubePrism.enabled: true</code>. Without KubePrism: if the external LB (kube-vip or MetalLB VIP) fails, kubelet on all worker nodes loses API connectivity. Pods stop being scheduled. Existing pods continue running but cluster appears broken. KubePrism prevents this entire failure class by bypassing the external LB entirely.",
+  g:["Talos built-in (enabled by default)","127.0.0.1:7445 on every node","Directly load-balances to all CP nodes","No external dependency","machine.features.kubePrism.enabled: true"]},
+
+"ha-externaldns":{l:"Layer 2 · High Availability",t:"ExternalDNS · automated DNS management",c:"var(--ha)",
+  d:"ExternalDNS watches Kubernetes Service and Ingress resources and automatically creates and updates DNS records in your DNS provider. No manual DNS entry ever needed for any platform service, vCluster endpoint, or tenant application.",
+  i:"ExternalDNS integrates with DNS providers via their APIs (Cloudflare, Route53, IONOS, etc.). Watches Services of type LoadBalancer and Ingress objects. Creates A/CNAME records matching the hostname annotation. For Headscale-connected services: creates internal DNS records. Config: <code>--source=service --source=ingress --provider=cloudflare</code>. Filter by namespace annotation to avoid exposing internal services.",
+  g:["ExternalDNS controller","--source=service --source=ingress","Cloudflare / Route53 / IONOS provider","Auto-creates A/CNAME records","Annotation: external-dns.alpha.kubernetes.io/hostname"]},
+
+"ha-cilium-ha":{l:"Layer 2 · High Availability",t:"Cilium kube-proxy replacement",c:"var(--ha)",
+  d:"Cilium replaces kube-proxy with eBPF programs running on each node. Service routing is distributed — no central proxy to fail. A node loss does not affect service routing on surviving nodes. KubeSpan note: not recommended for storage replication or HPC due to WireGuard encryption overhead.",
+  i:"Talos: disable kube-proxy at the cluster level (<code>cluster.proxy.disabled: true</code> in machine config), then install Cilium with kube-proxy replacement mode. eBPF programs handle Service DNAT directly in the kernel. No iptables rules. Cluster Mesh: mTLS between clusters via clustermesh-apiserver Service. ServiceExport / ServiceImport CRDs enable cross-cluster service discovery.",
+  g:["kube-proxy disabled in Talos config","Cilium in kube-proxy replacement mode","eBPF Service DNAT (kernel-level)","Cluster Mesh (cross-cluster DNS)","ServiceExport / ServiceImport CRDs"]},
+
+"ha-argocd":{l:"Layer 2 · High Availability",t:"ArgoCD HA",c:"var(--ha)",
+  d:"ArgoCD deployed in HA mode with 3 application controller replicas, Redis HA, and multiple server replicas. No single ArgoCD pod failure can interrupt GitOps reconciliation.",
+  i:"ArgoCD HA Helm values: <code>controller.replicas: 3</code>, <code>redis-ha.enabled: true</code>, <code>server.replicas: 2</code>, <code>repoServer.replicas: 2</code>. Application controller uses consistent hashing — each replica owns a shard of Applications. Redis HA uses Sentinel for leader election. PodDisruptionBudget ensures minAvailable:1 during node drain.",
+  g:["controller.replicas: 3","redis-ha.enabled: true (Sentinel)","server.replicas: 2","repoServer.replicas: 2","PodDisruptionBudget: minAvailable 1"]},
+
+"ha-vault":{l:"Layer 2 · High Availability",t:"Vault HA (Raft)",c:"var(--ha)",
+  d:"3 Vault nodes with integrated Raft storage — no external etcd dependency. Active/standby mode with automatic failover. Auto-unseal via Talos TPM or Vault Transit.",
+  i:"Vault Raft: all 3 nodes store data locally and replicate via Raft consensus. The active node handles all reads and writes — standby nodes redirect automatically. Auto-unseal options: Vault Transit (a second Vault instance unseals this one), cloud KMS (AWS/GCP/Azure), or TPM-based unseal via Talos TPM support — the correct choice for on-premises and air-gapped deployments where no external KMS dependency is acceptable. Backup: Velero backs up the Vault namespace including Raft snapshots. PITR: Vault Raft snapshots archived continuously to a dedicated MinIO bucket.",
+  g:["3 Vault nodes (Raft)","Active/standby failover","Auto-unseal (TPM or Transit)","Raft snapshot → MinIO backup","PodDisruptionBudget"]},
+
+"ha-keycloak":{l:"Layer 2 · High Availability",t:"Keycloak HA",c:"var(--ha)",
+  d:"2+ Keycloak replicas with Infinispan distributed session cache — any replica can serve any authenticated session. CNPG HA backend (primary + standby) ensures database availability. Keycloak restart does not break active SSO sessions.",
+  i:"Keycloak Helm chart: <code>replicas: 2</code>, <code>cache.enabled: true</code> (Infinispan embedded). Backend: CNPG cluster with 1 primary + 1 standby. Keycloak configured as OIDC provider for Kubernetes API server (<code>--oidc-issuer-url</code>, <code>--oidc-client-id</code> in kube-apiserver args via Talos machine config). Group claims map to Kubernetes RBAC roles.",
+  g:["Keycloak replicas: 2+","Infinispan session cache","CNPG backend (primary + standby)","OIDC for kube-apiserver (Sidero rec)","Group claims → K8s RBAC"]},
+
+"ha-pdb":{l:"Layer 2 · High Availability",t:"PodDisruptionBudgets",c:"var(--ha)",
+  d:"PodDisruptionBudgets with minAvailable:1 on all management services ensure safe node drain without service loss. Node upgrades, Ceph rebalancing, and CAPI node replacements all respect PDBs.",
+  i:"Applied by ArgoCD to: ArgoCD, Vault, Keycloak, Prometheus, Loki, Grafana, MinIO, ESO, cert-manager. <code>minAvailable: 1</code> prevents Kubernetes from draining a node if it would take the last pod of a service offline. During Talos node upgrades: <code>talosctl upgrade --node &lt;IP&gt;</code> drains the node first — PDBs protect services during drain.",
+  g:["PodDisruptionBudget (all management services)","minAvailable: 1","Applied by ArgoCD provisioning template","Protects node drain and upgrades","Works with CAPI node replacement"]},
+
+"ha-spread":{l:"Layer 2 · High Availability",t:"Failure domain spread",c:"var(--ha)",
+  d:"Control plane nodes must be on separate physical hosts. A single physical host failure loses at most 1 of 3 CP nodes — etcd quorum is maintained. PodAntiAffinity rules also spread management plane services (ArgoCD, Vault, Keycloak) across different worker nodes.",
+  i:"Talos/CAPI: assign CP nodes to different Proxmox hosts via CAPI machine placement constraints. PodAntiAffinity: <code>requiredDuringSchedulingIgnoredDuringExecution</code> on CP nodes for maximum guarantee. For 3-host setups: 1 CP per host. PodTopologySpreadConstraints on management services to spread across worker nodes. Ceph: ensure OSDs span multiple physical hosts for replication domain isolation.",
+  g:["CAPI placement constraints","1 CP node per physical host","PodAntiAffinity (CP nodes)","PodTopologySpreadConstraints (services)","Ceph replication across physical hosts"]},
+
+/* ── LAYER 3: GITOPS ── */
+"g-argocd":{l:"Layer 3 · GitOps Bootstrap",t:"ArgoCD Hub (HA)",c:"var(--gitops)",
+  d:"ArgoCD is the single GitOps control plane for the entire platform. It is installed in Phase 03 after GitLab CE is already running — so its very first repo Secret points at the internal GitLab URL. There is no external dependency and no migration. The App-of-Apps pattern: one root Application in Git points to all other Applications. ArgoCD reconciles continuously — any drift from Git state is auto-corrected.",
+  i:"Install after GitLab is confirmed healthy: <code>helm install argocd argo/argo-cd -n argocd --create-namespace</code>. Immediately create repo Secret pointing at internal GitLab: <code>argocd repo add https://gitlab.internal/platform --username argocd --password TOKEN</code>. Commit App-of-Apps root Application to GitLab — ArgoCD picks it up on first sync. Sync policy: <code>automated: {prune: true, selfHeal: true}</code>. From this point: no need to run helm install or kubectl apply again.",
+  g:["Installed after GitLab (correct order)","Repo Secret → internal GitLab from day one","App-of-Apps root Application","automated sync: prune + selfHeal","Multi-cluster: argocd cluster add"]},
+
+"g-gitlab":{l:"Layer 3 · GitOps Bootstrap",t:"GitLab CE (in-cluster)",c:"var(--gitops)",
+  d:"GitLab CE is installed imperatively in Phase 03 — before ArgoCD — making it the internal Git source of truth from day one. This is the correct bootstrap sequence: GitLab must exist first so ArgoCD can point at an internal repo from its very first sync. There is no external GitHub dependency, no temporary repo, and no migration step. The platform is fully self-contained from the moment ArgoCD starts.",
+  i:"GitLab CE requires three dependencies installed before it: cert-manager (webhook TLS), Rook-Ceph with a minimal CephCluster (Gitaly git storage via Ceph RBD PVC), and CNPG (PostgreSQL database backend). Install: <code>helm install gitlab gitlab/gitlab</code> with values: <code>global.psql.host</code> → CNPG service, <code>global.gitaly.persistence.storageClass</code> → rook-ceph-block, <code>global.appConfig.omniauth</code> → Keycloak OIDC (configured after Keycloak is up). Once GitLab is running: push all platform manifests to it, then install ArgoCD and configure its repo Secret to point at the internal GitLab URL. Push mirror to GitHub for public portfolio visibility only.",
+  g:["Installed before ArgoCD (correct order)","CNPG backend (PostgreSQL)","Ceph RBD StorageClass (Gitaly)","ArgoCD repo Secret → internal GitLab URL","Push mirror → GitHub (portfolio only)"]},
+
+"g-appset":{l:"Layer 3 · GitOps Bootstrap",t:"ApplicationSet",c:"var(--gitops)",
+  d:"ApplicationSet controller generates ArgoCD Applications from a Git directory structure. One file in clusters/tenants/ → one vCluster Application created and deployed automatically. Delete the file → ArgoCD finalizer removes everything. This is how the self-service portal provisions without ever calling the Kubernetes API directly.",
+  i:"Git-dir generator: <code>repoURL: https://gitlab.internal/platform</code>, <code>directory.path: clusters/tenants/*</code>. Each directory becomes an Application targeting the management cluster. Template: installs vCluster Helm chart with values from the directory. Deletion: ArgoCD finalizer on the Application cascades to the vCluster and all its resources. Resize: update values.yaml in the tenant directory → ArgoCD performs Helm upgrade.",
+  g:["ApplicationSet git-dir generator","clusters/tenants/* (vClusters)","clusters/dedicated/* (dedicated)","edge/sites/* (KubeEdge)","vms/workloads/* (KubeVirt)"]},
+
+"g-reloader":{l:"Layer 3 · GitOps Bootstrap",t:"Reloader",c:"var(--gitops)",
+  d:"Reloader watches ConfigMaps and Secrets and triggers rolling restarts of Deployments, StatefulSets, and DaemonSets when those resources change. When ArgoCD syncs a new Secret value from Vault via ESO, Reloader ensures the consuming pods automatically restart and pick up the new value — without requiring a pod template hash change.",
+  i:"Annotate Deployments/StatefulSets: <code>reloader.stakater.com/auto: 'true'</code> for auto-detection of referenced ConfigMaps/Secrets, or <code>secret.reloader.stakater.com/reload: 'my-secret'</code> for specific resources. Reloader watches for resource version changes and triggers a rolling restart. Complements ArgoCD: ArgoCD syncs the Secret, ESO propagates to K8s Secret, Reloader restarts the pod.",
+  g:["Reloader controller","reloader.stakater.com/auto: 'true' annotation","Watches ConfigMap and Secret versions","Triggers rolling restart on change","Works with ESO secret propagation"]},
+
+/* ── LAYER 4: STORAGE ── */
+"stor-ceph":{l:"Layer 4 · Storage",t:"Rook-Ceph operator",c:"var(--stor)",
+  d:"Rook operates the full Ceph cluster lifecycle via Kubernetes CRDs. MON (monitors for cluster state), MGR (management and metrics), OSD (storage daemons on raw disks), MDS (metadata server for CephFS). A single Rook operator manages all storage types from one CephCluster CRD.",
+  i:"CephCluster CRD: <code>storage.useAllDevices: false</code>, <code>storage.devices: [{name: /dev/vdb}]</code> per node (raw disk, no filesystem). Rook discovers raw disks automatically when they have no filesystem or partition table. OSDs run as Pods — one per disk. Replication factor 3: any 2 of 3 OSD nodes can fail without data loss. Monitor dashboard: <code>kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph status</code>.",
+  g:["CephCluster CRD","MON / MGR / OSD / MDS","storage.useAllDevices: false","Raw disk (no filesystem/partition)","ceph status (via rook-ceph-tools)"]},
+
+"stor-rbd":{l:"Layer 4 · Storage",t:"Ceph RBD (block storage)",c:"var(--stor)",
+  d:"Ceph RBD is the default StorageClass for ReadWriteOnce volumes — databases (CNPG), application state, KubeVirt VM disks. Operates via the rbd kernel module (must be included as Talos extension at factory.talos.dev). No userspace replication overhead — kernel-level block device.",
+  i:"StorageClass: <code>provisioner: rook-ceph.rbd.csi.ceph.com</code>, <code>reclaimPolicy: Retain</code>. For CNPG: <code>storageClass: rook-ceph-block</code>. For KubeVirt VMs: RBD PVCs support live migration via CSI clone. The <code>rbd</code> Talos extension is mandatory — without it, RBD PVCs will fail to attach with a cryptic kernel module error. Verify: <code>talosctl read /proc/modules | grep rbd</code>.",
+  g:["rook-ceph.rbd.csi.ceph.com provisioner","ReadWriteOnce (RWO)","Talos extension: siderolabs/rbd (mandatory)","Supports live migration (KubeVirt)","reclaimPolicy: Retain (recommended)"]},
+
+"stor-cephfs":{l:"Layer 4 · Storage",t:"CephFS (filesystem)",c:"var(--stor)",
+  d:"CephFS provides ReadWriteMany volumes — multiple pods can mount the same PVC simultaneously. Used for Nextcloud file store, shared configuration volumes, and any workload requiring concurrent multi-pod write access.",
+  i:"StorageClass: <code>provisioner: rook-ceph.cephfs.csi.ceph.com</code>. MDS (metadata server) required: at least 1 active + 1 standby. For Nextcloud: <code>storageClass: rook-ceph-filesystem</code> with <code>accessModes: [ReadWriteMany]</code>. CephFS subvolumes: each PVC gets an isolated subvolume — no filesystem sharing between tenants. Quota enforcement: CephFS enforces storage quotas at subvolume level.",
+  g:["rook-ceph.cephfs.csi.ceph.com provisioner","ReadWriteMany (RWX)","MDS: 1 active + 1 standby","Isolated subvolumes per PVC","Storage quota enforcement"]},
+
+"stor-rgw":{l:"Layer 4 · Storage",t:"Ceph RadosGW (S3)",c:"var(--stor)",
+  d:"Ceph RadosGW provides S3-compatible object storage internally — used for Loki log backend, internal Velero snapshots, and CNPG WAL archiving. Not exposed externally; MinIO provides the tenant-facing S3 endpoint.",
+  i:"CephObjectStore CRD creates RadosGW. S3 endpoint: <code>http://rook-ceph-rgw-my-store.rook-ceph.svc</code>. Loki config: <code>s3.endpoint: http://rook-ceph-rgw-...</code>. Velero: <code>--use-volume-snapshots=true</code> with Ceph CSI snapshot class. RadosGW user credentials created via CephObjectStoreUser CRD, synced to K8s Secrets by Rook.",
+  g:["CephObjectStore CRD","S3-compatible API","Loki log storage backend","Velero snapshot backend","CNPG WAL archiving target"]},
+
+"stor-minio":{l:"Layer 4 · Storage",t:"MinIO (distributed)",c:"var(--stor)",
+  d:"MinIO provides the tenant-facing S3 endpoint with per-tenant bucket isolation. 4-node distributed mode with erasure coding. Used for CNPG WAL archiving, offsite replication via rclone, and direct tenant object storage.",
+  i:"MinIO Operator: deploy MinIO Tenant CRD. 4 nodes, erasure coding 2+2. Per-tenant buckets created by ArgoCD provisioning template. Bucket policy: tenant IAM user has access only to their bucket. CNPG WAL config: <code>barmanObjectStore.destinationPath: s3://cnpg-production/</code>. Offsite: <code>rclone sync minio:cnpg-production hetzner:cnpg-backup</code> via CronJob.",
+  g:["MinIO Operator (Tenant CRD)","4-node erasure coding (2+2)","Per-tenant bucket + IAM user","CNPG WAL archiving","rclone → Hetzner/IONOS offsite"]},
+
+"stor-offsite":{l:"Layer 4 · Storage",t:"Offsite replication",c:"var(--stor)",
+  d:"3-2-1 backup rule: 3 copies, 2 different media (Ceph RBD + MinIO), 1 offsite (Hetzner/IONOS Object Storage). EU-sovereign storage providers — BSI C5-certified. No data leaves Germany/EU.",
+  i:"rclone CronJob: runs every 6h, syncs MinIO buckets to Hetzner Object Storage (S3-compatible). IONOS Object Storage: BSI C5 certified, Frankfurt datacenter. rclone config: <code>[hetzner]</code> type = s3, provider = Other, endpoint = fsn1.your-objectstorage.com. Encryption: rclone crypt remote on top for client-side encryption before upload.",
+  g:["rclone sync (CronJob · every 6h)","Hetzner Object Storage (S3)","IONOS Object Storage (BSI C5)","EU-sovereign · no CLOUD Act","rclone crypt (client-side encryption)"]},
+
+"stor-velero":{l:"Layer 4 · Storage",t:"Velero · backup and disaster recovery",c:"var(--stor)",
+  d:"Velero backs up Kubernetes object state (Deployments, ConfigMaps, Secrets, CRDs) and triggers CSI volume snapshots. Single Velero instance on the management cluster covers all vClusters. Schedule: daily full backup, 30-day retention.",
+  i:"Velero with Ceph CSI snapshot class: <code>velero install --plugins velero/velero-plugin-for-aws --use-volume-snapshots=true --snapshot-location-config region=us-east-1,s3Url=http://rook-ceph-rgw...</code>. VolumeSnapshotLocation CRD: Ceph CSI. BackupStorageLocation: RadosGW bucket. Schedule: <code>velero schedule create daily --schedule='0 2 * * *'</code>. Restore: <code>velero restore create --from-backup daily-...</code>.",
+  g:["Velero controller","CSI VolumeSnapshot (Ceph)","BackupStorageLocation: RadosGW","Schedule: daily 0200 UTC","30-day retention"]},
+
+"stor-cnpg":{l:"Layer 4 · Storage",t:"CNPG WAL archiving",c:"var(--stor)",
+  d:"CloudNativePG provides PostgreSQL clusters with continuous WAL (Write-Ahead Log) archiving to MinIO. Point-in-time recovery (PITR) to any second within the retention window. Per-tenant MinIO bucket isolation — staging and production never share a bucket.",
+  i:"CNPG Cluster spec: <code>backup.barmanObjectStore.destinationPath: s3://cnpg-TENANT/</code>, <code>backup.barmanObjectStore.endpointURL: http://minio.minio.svc</code>. Credentials via ESO from <code>secret/tenants/TENANT/cnpg</code>. PITR: <code>kubectl cnpg restore CLUSTER --target-time '2025-05-01 12:00:00'</code>. initdb secret keys must be exactly <code>username</code> and <code>password</code> (common gotcha).",
+  g:["CNPG Cluster CRD","WAL archiving → MinIO per-tenant bucket","PITR (point-in-time recovery)","ESO credentials from Vault","initdb keys: username + password"]},
+
+/* ── LAYER 5: SECRETS + IDENTITY ── */
+"id-vault":{l:"Layer 5 · Secrets + Identity",t:"Vault HA (Raft)",c:"var(--id)",
+  d:"Single Vault cluster is the source of truth for all secrets across all clusters and deployment models. Per-tenant KV paths with least-privilege policies — a tenant can only read their own secrets. Vault is accessed by all workload clusters via Cilium Cluster Mesh DNS.",
+  i:"Vault KV v2 paths: <code>secret/tenants/TENANT/*</code> per tenant. Policy: <code>path \"secret/data/tenants/TEAM/*\" { capabilities = [\"read\"] }</code>. ESO auth: Kubernetes auth method — each cluster gets a Vault role bound to its service account. talosctl gen secrets: cluster CA and bootstrap token stored in Vault, not in Git. Cert rotation: Talos CCM reads from Vault and rotates automatically.",
+  g:["KV v2: secret/tenants/TEAM/*","Kubernetes auth method (per cluster)","Least-privilege policies","Vault accessible via Cluster Mesh DNS","Talos CCM for cert rotation"]},
+
+"id-eso":{l:"Layer 5 · Secrets + Identity",t:"External Secrets Operator",c:"var(--id)",
+  d:"ESO runs a ClusterSecretStore per tenant, scoped to that tenant's Vault path only. ExternalSecret CRDs define which Vault keys to sync and where to create the resulting Kubernetes Secrets. Reloader watches the resulting Secrets and restarts pods when values change.",
+  i:"ClusterSecretStore: Vault backend, <code>path: secret/tenants/TEAM</code>, Kubernetes auth. ExternalSecret: <code>secretStoreRef: TEAM-store</code>, <code>target: {name: my-secret}</code>, <code>data: [{secretKey: password, remoteRef: {key: db, property: password}}]</code>. Rotation: set <code>refreshInterval: 1h</code> → ESO re-reads Vault hourly, updates K8s Secret, Reloader restarts pods.",
+  g:["ClusterSecretStore (per tenant)","ExternalSecret CRD","Vault backend","refreshInterval: 1h","Works with Reloader for auto-restart"]},
+
+"id-keycloak":{l:"Layer 5 · Secrets + Identity",t:"Keycloak HA",c:"var(--id)",
+  d:"Single Keycloak instance provides OIDC SSO for all clusters, the Backstage portal, Grafana, GitLab, and all tenant applications. Keycloak groups map to Kubernetes RBAC roles in each vCluster. OIDC configured on the Kubernetes API server — employees leaving the company lose cluster access immediately when deprovisioned in Keycloak.",
+  i:"API server OIDC config in Talos machine config: <code>extraArgs: {oidc-issuer-url: 'https://keycloak.../realms/platform', oidc-client-id: kubernetes, oidc-username-claim: email, oidc-groups-claim: groups}</code>. Keycloak groups: <code>platform-admin</code> → ClusterAdmin, <code>team-TEAM</code> → Namespace admin in vCluster. No admin kubeconfig distributed — OIDC is the only auth path for production.",
+  g:["OIDC issuer for kube-apiserver","Groups claim → K8s RBAC","Keycloak group provisioning","Grafana / GitLab / portal SSO","No admin kubeconfig distribution"]},
+
+"id-certmanager":{l:"Layer 5 · Secrets + Identity",t:"cert-manager + Talos CCM",c:"var(--id)",
+  d:"cert-manager issues and renews TLS certificates for all internal services: webhook endpoints, CNPG replication, ESO operator TLS, ingress TLS. Talos Cloud Controller Manager enables automatic rotation of cluster CA certificates — eliminates the need for manual certificate rotation.",
+  i:"cert-manager issuers: Let's Encrypt (public endpoints, DNS-01 via Cloudflare), self-signed CA (internal services). Talos CCM: <code>github.com/siderolabs/talos-cloud-controller-manager</code> — deployed via ArgoCD. CCM watches for certificate expiry and triggers <code>talosctl apply-config</code> with new secrets. Separate secrets from config: always use <code>talosctl gen secrets</code> + <code>talosctl gen config --with-secrets</code>.",
+  g:["cert-manager (Let's Encrypt + internal CA)","DNS-01 challenge (Cloudflare)","Talos CCM (cert auto-rotation)","talosctl gen secrets (separate flow)","CNPG / ESO / webhook TLS"]},
+
+/* ── LAYER 6: OBSERVABILITY ── */
+"obs-otel":{l:"Layer 6 · Observability",t:"OpenTelemetry Collector",c:"var(--obs)",
+  d:"The OTel Collector is the unified telemetry ingestion point for all workloads. Workloads instrument once against the OTel SDK — the collector handles routing to Prometheus (metrics), Loki (logs), and Tempo (traces). No per-backend client libraries in application code. Deployed as a DaemonSet for node-level telemetry and as a Deployment for cluster-level aggregation.",
+  i:"OTel Collector pipeline: receivers (OTLP gRPC/HTTP, Prometheus scrape, Loki push), processors (batch, memory_limiter, resource detection), exporters (Prometheus remote_write, Loki push, Tempo OTLP). DaemonSet: node metrics, host logs, Falco events. Deployment: cluster-level aggregation, cross-cluster fan-out to central VictoriaMetrics. Config via ConfigMap managed by ArgoCD.",
+  g:["OTel Collector DaemonSet (node-level)","OTel Collector Deployment (cluster-level)","OTLP receivers (gRPC + HTTP)","Prometheus remote_write exporter","Loki push exporter"]},
+
+"obs-prometheus":{l:"Layer 6 · Observability · Sidero: tiered recommendation",t:"Prometheus / VictoriaMetrics",c:"var(--obs)",
+  d:"Prometheus for management cluster and small/few workload clusters. VictoriaMetrics for large multi-cluster deployments — Sidero explicitly recommends it for complex or large-scale deployments. VictoriaMetrics is a drop-in Prometheus replacement with better compression, faster queries, and lower memory usage at scale.",
+  i:"Small (1-3 clusters): kube-prometheus-stack. Large (3+ clusters or >50 nodes each): VictoriaMetrics cluster mode with vminsert/vmselect/vmstorage separation. VictoriaMetrics agent (vmagent) replaces Prometheus scraping in each cluster — lightweight, pushes remote_write to central vminsert. Grafana datasource: VictoriaMetrics uses Prometheus-compatible API, zero dashboard changes.",
+  g:["kube-prometheus-stack (small scale)","VictoriaMetrics cluster (large scale)","vmagent per cluster (remote_write)","vminsert / vmselect / vmstorage","Prometheus-compatible API"]},
+
+"obs-loki":{l:"Layer 6 · Observability",t:"Loki / VictoriaLogs",c:"var(--obs)",
+  d:"Loki aggregates logs from all cluster pods via a host Promtail DaemonSet. Per-tenant labels prevent cross-tenant log leakage. VictoriaLogs is the Sidero-recommended alternative at scale — better compression and faster queries than Loki for large log volumes.",
+  i:"Promtail DaemonSet: <code>extraRelabelConfigs</code> to add <code>namespace</code> and <code>vcluster_name</code> labels. Loki multi-tenancy: <code>auth_enabled: true</code>, tenant ID = namespace. Grafana: per-tenant Loki datasource with tenant ID header. VictoriaLogs drop-in: replace Loki endpoint URL in Promtail config. Ceph RadosGW S3 backend for both.",
+  g:["Promtail DaemonSet (host)","Per-tenant namespace labels","Loki multi-tenancy (auth_enabled)","VictoriaLogs (scale alternative)","Ceph RadosGW S3 backend"]},
+
+"obs-grafana":{l:"Layer 6 · Observability",t:"Grafana",c:"var(--obs)",
+  d:"Unified dashboard platform for all metrics, logs, and traces. Keycloak SSO via OIDC. Per-tenant folder permissions — each team sees only their namespace data. Pre-built dashboards: Ceph cluster health, Kubernetes cluster overview, vCluster resource usage, BSI compliance dashboard.",
+  i:"Grafana config: <code>auth.generic_oauth</code> → Keycloak. Dashboard provisioning via ConfigMaps (ArgoCD managed). Folder-level permissions: Keycloak group → Grafana org role. Ceph dashboard: built into Rook, accessible at <code>https://grafana.../d/ceph-cluster</code>. Alert rules: PrometheusRule CRDs managed by ArgoCD, routed via Alertmanager.",
+  g:["Keycloak OIDC SSO","Folder-level tenant permissions","Ceph + K8s pre-built dashboards","PrometheusRule CRDs (ArgoCD)","Per-tenant datasource scoping"]},
+
+"obs-hubble":{l:"Layer 6 · Observability",t:"Cilium Hubble",c:"var(--obs)",
+  d:"Hubble Relay aggregates network flow data from all nodes. Hubble UI provides a real-time service dependency graph — essential for debugging microservice connectivity and demonstrating BSI compliance. Per-namespace filtering shows tenants only their own flows.",
+  i:"Hubble enabled in Cilium Helm values: <code>hubble.relay.enabled: true</code>, <code>hubble.ui.enabled: true</code>. Hubble UI behind nginx-ingress + Keycloak auth proxy. CLI: <code>hubble observe --namespace team-production --verdict DROPPED</code> — shows dropped packets with policy name that dropped them. Prometheus metrics from Hubble endpoint: <code>hubble_flows_processed_total</code> by verdict.",
+  g:["hubble.relay.enabled: true","hubble.ui.enabled: true","hubble observe --verdict DROPPED","Prometheus metrics from Hubble","Per-namespace flow filtering"]},
+
+"obs-alertmanager":{l:"Layer 6 · Observability",t:"Alertmanager",c:"var(--obs)",
+  d:"Namespace-based alert routing — each tenant receives only alerts for their namespace. Platform alerts (Ceph health, node down, ArgoCD sync failure) route to the platform Slack channel. Tenant alerts route to tenant-specific Slack channels or webhooks.",
+  i:"AlertmanagerConfig CRD (per namespace): <code>route.matchers: [{name: namespace, value: team-TEAM}]</code>, <code>receivers: [{name: slack, slackConfigs: [{channel: #team-alerts}]}]</code>. Platform alerts: PagerDuty integration for P1 (node down, Ceph HEALTH_ERR). Inhibition rules: silence lower-severity alerts when a node is already down.",
+  g:["AlertmanagerConfig CRD (per tenant)","namespace matcher for routing","Slack receiver per tenant","PagerDuty (P1 platform alerts)","Inhibition rules"]},
+
+"obs-uptime":{l:"Layer 6 · Observability",t:"Uptime Kuma",c:"var(--obs)",
+  d:"Uptime Kuma monitors endpoint availability for all vCluster and dedicated cluster services. Provides SLI signals (availability percentage) for SLO reporting. Status page for tenant teams showing their service availability history.",
+  i:"Uptime Kuma deployment: single instance, SQLite storage (Ceph RBD PVC). Monitors added via API at vCluster provisioning time (portal calls Uptime Kuma API). Monitor types: HTTP(s) status check, TCP port, DNS. Public status page per tenant. Prometheus integration: Uptime Kuma exports metrics at <code>/metrics</code> — scraped by Prometheus for Grafana SLO dashboards.",
+  g:["Single Uptime Kuma instance","HTTP/TCP/DNS monitor types","Auto-provisioned at vCluster creation","Prometheus /metrics export","Per-tenant status page"]},
+
+/* ── LAYER 7: SECURITY ── */
+"sec-kyverno":{l:"Layer 7 · Security · Replaces Pod Security Standards",t:"Kyverno",c:"var(--sec)",
+  d:"Kyverno is a Kubernetes-native policy engine that replaces and extends Pod Security Standards. Three policy types: validate (enforce rules), mutate (auto-fix missing fields), generate (auto-create resources like NetworkPolicy on namespace creation). Image signature verification integrates with Harbor/Cosign.",
+  i:"ClusterPolicy examples — Validate: <code>spec.containers[*].securityContext.readOnlyRootFilesystem: true</code>. Mutate: add default resource limits when missing. Generate: on Namespace creation, generate a default-deny CiliumNetworkPolicy. Image verify: <code>verifyImages: [{imageReferences: ['harbor.internal/*'], attestors: [{cosign: {key: ...}}]}]</code>. Runs in HA: 3 replicas, PDB. PolicyReport CRDs for compliance reporting.",
+  g:["ClusterPolicy CRD (validate/mutate/generate)","Image signature verification (Cosign)","Generate: NetworkPolicy on namespace create","PolicyReport CRD (compliance)","3 replicas + PDB"]},
+
+"sec-harbor":{l:"Layer 7 · Security",t:"Harbor · OCI registry",c:"var(--sec)",
+  d:"Harbor is the internal OCI registry for all container images. Every image built by GitLab Runner is pushed to Harbor, scanned by Trivy, and signed with Cosign. Kyverno then enforces that only Harbor-signed images can run in any cluster namespace. No external registry image can be deployed without going through the Harbor trust chain.",
+  i:"Harbor deployment: <code>harbor/harbor</code> Helm chart. Storage: Ceph RadosGW S3 for blob storage. Trivy integration: enabled by default, scans on push. Cosign signing in CI: <code>cosign sign --key $COSIGN_KEY harbor.internal/IMAGE:TAG</code>. Kyverno ClusterPolicy: <code>verifyImages</code> with Harbor registry prefix + Cosign public key. Replication: Harbor can replicate images from DockerHub/GHCR for air-gap use.",
+  g:["Harbor Helm chart","Ceph RadosGW (blob storage)","Trivy scan on push","Cosign image signing (CI pipeline)","Kyverno verifyImages enforcement"]},
+
+"sec-falco":{l:"Layer 7 · Security",t:"Falco · runtime security",c:"var(--sec)",
+  d:"Falco monitors syscalls from the host kernel using an eBPF probe — covering all tenant workloads without per-vCluster installation. Detects privilege escalation, unexpected network connections, sensitive file access, and container escape attempts. Talos-compatible (eBPF probe, no kernel module required on modern Talos).",
+  i:"Falco Helm chart with eBPF driver: <code>driver.kind: ebpf</code>. Talos: eBPF probe works without loading a kernel module. Rules: default Falco rules + custom rules for platform (alert on kubectl exec in production namespaces, alert on write to /etc). Output: Falco Sidekick → Alertmanager → PagerDuty for critical alerts. Audit log integration: Kubernetes audit webhook → Falco for API-level anomaly detection.",
+  g:["Falco with eBPF driver (Talos-compatible)","driver.kind: ebpf","Default + custom rule sets","Falco Sidekick → Alertmanager","K8s audit webhook integration"]},
+
+"sec-netpol":{l:"Layer 7 · Security",t:"CiliumNetworkPolicy",c:"var(--sec)",
+  d:"Default-deny CiliumNetworkPolicy applied to every tenant namespace at provisioning time. Tenants must explicitly allow egress to external services. Pre-approved egress to Vault, Keycloak, and MinIO via Cluster Mesh. eBPF kernel-level enforcement — no way to bypass.",
+  i:"Generated by Kyverno ClusterPolicy on namespace creation. Base policy: <code>endpointSelector: {}</code> (all pods in NS), <code>egress: [{toEndpoints: [{matchLabels: {'k8s:io.kubernetes.pod.namespace': kube-dns}}], toPorts: [{ports: [{port: '53', protocol: ANY}]}]}]</code> — DNS only. Add Vault/Keycloak egress via Cluster Mesh service endpoints. L7 HTTP policy: restrict to specific paths/methods for microservice APIs.",
+  g:["CiliumNetworkPolicy (default-deny)","Kyverno auto-generate on namespace create","Pre-approved: Vault/Keycloak/MinIO (Mesh DNS)","L7 HTTP policy per service","eBPF kernel enforcement"]},
+
+"sec-headscale":{l:"Layer 7 · Security",t:"Headscale WireGuard",c:"var(--sec)",
+  d:"Self-hosted WireGuard coordination server replacing Cloudflare Tunnel. Full EU data sovereignty — no third-party transit, no CLOUD Act exposure. HA pair with CNPG PostgreSQL backend and VIP. Failure mode: both replicas down → existing WireGuard tunnels remain operational; new devices cannot register until recovery.",
+  i:"Headscale deployed as HA pair (2 replicas, PDB). CNPG backend for state. VIP via MetalLB. WireGuard key exchange: devices register with headscale-api, receive DERP map + peer list. EdgeCore (KubeEdge): edge device initiates outbound WireGuard tunnel to CloudCore via Headscale coordination — zero inbound ports on edge device. Management network: all talosctl, ArgoCD, and platform traffic over WireGuard mesh.",
+  g:["Headscale (2 replicas + PDB)","CNPG PostgreSQL backend","MetalLB VIP","WireGuard: zero inbound ports","Existing tunnels survive Headscale restart"]},
+
+"sec-talos-fw":{l:"Layer 7 · Security · From Sidero reference",t:"Talos Ingress Firewall",c:"var(--sec)",
+  d:"The Talos Ingress Firewall adds OS-level packet filtering below the Kubernetes NetworkPolicy layer. Default-allow by default — must be explicitly configured for internet-facing clusters. Recommended by Sidero for: clusters exposed to the internet, regulatory compliance requiring OS-level controls, and zero-trust environments.",
+  i:"Configure in Talos machine config: <code>machine.network.kubespan.ingressFirewall</code> or via TalosLinux <code>NetworkDefaultAction</code> CRD. Recommended rules: allow inbound from CP nodes and workers only (block all other inbound). For internet-facing clusters: allow only port 443 inbound, block everything else. Complements CiliumNetworkPolicy — operates at the OS packet filter level before any CNI processing.",
+  g:["Talos machine config ingress firewall","Default: block all except explicit allow","For internet-facing clusters","Complements CiliumNetworkPolicy","OS-level: below CNI processing"]},
+
+"sec-kubebench":{l:"Layer 7 · Security",t:"kube-bench + Kubescape",c:"var(--sec)",
+  d:"kube-bench runs CIS Kubernetes Benchmark checks on node configuration (kubelet flags, etcd settings, API server args). Kubescape scans RBAC posture, workload security, and maps findings to NSA/CISA and MITRE ATT&CK frameworks. Both run on schedule via GitLab CI — results pushed to Grafana. Alertmanager fires on any regression.",
+  i:"kube-bench: run as a Job in each cluster targeting the CIS benchmark for the K8s version in use. Output: JSON → parsed by CI, failures create GitLab issues. Talos-specific: some CIS checks reference files that don't exist in Talos (immutable OS) — use <code>--skip</code> for non-applicable checks. Kubescape: <code>kubescape scan framework NSA --format prometheus --output /tmp/results</code> → Pushgateway → Grafana dashboard.",
+  g:["kube-bench CIS benchmark (scheduled)","Kubescape NSA/MITRE frameworks","GitLab CI scheduled pipeline","Results → Grafana compliance dashboard","Alertmanager: alert on regression"]},
+
+"sec-gitleaks":{l:"Layer 7 · Security · CI pipeline",t:"Gitleaks",c:"var(--sec)",
+  d:"Gitleaks scans every commit for secrets (API keys, passwords, tokens, private keys) before the build stage runs. The pre-build gate blocks the pipeline immediately if a secret is detected — no secret ever reaches a container image or the cluster.",
+  i:"GitLab CI stage: <code>gitleaks:detect</code> runs first before any build stage. <code>gitleaks detect --source . --exit-code 1</code> blocks the pipeline on detection. Custom rules: add patterns for company-specific secret formats (LDAP passwords, internal API keys). Baseline: <code>gitleaks detect --baseline-path .gitleaks-baseline.json</code> to ignore known false positives. Remediation: rotate the secret, remove from Git history with <code>git-filter-repo</code>.",
+  g:["GitLab CI first stage (pre-build)","gitleaks detect --exit-code 1","Custom rule patterns","Baseline for false positive suppression","git-filter-repo for history remediation"]},
+
+/* ── LAYER 8: CI/CD ── */
+"ci-runner":{l:"Layer 8 · CI/CD Platform",t:"GitLab Runner",c:"var(--ci)",
+  d:"GitLab Runner with Kubernetes executor runs every CI/CD pipeline as ephemeral pods on the management cluster. Pods are created for the job and deleted after completion — no persistent runner state. Image promotion pipeline: build → Trivy → Harbor → sign → update image tag in Git → ArgoCD deploys.",
+  i:"GitLab Runner Helm chart: <code>gitlabUrl: https://gitlab.internal</code>, <code>runnerToken: ...</code> (from Vault via ESO), <code>executor: kubernetes</code>. Each job = one pod per stage. Resource limits on job pods via Runner config. Pipeline stages: gitleaks → build → trivy-scan → harbor-push → cosign-sign → update-manifests. ArgoCD auto-sync picks up the new image tag commit.",
+  g:["Kubernetes executor (ephemeral pods)","Runner token from Vault via ESO","Pipeline: gitleaks→build→trivy→harbor→sign","Image tag commit → ArgoCD auto-sync","Resource limits on job pods"]},
+
+"ci-trivy":{l:"Layer 8 · CI/CD Platform",t:"Trivy CVE gate",c:"var(--ci)",
+  d:"Trivy scans every container image for known CVEs after the build stage. Fails the pipeline on any Critical severity finding — blocking the image from reaching Harbor. High severity findings create GitLab issues for tracking. Renovate opens MRs for base image updates when new CVE-free versions are available.",
+  i:"Trivy in CI: <code>trivy image --exit-code 1 --severity CRITICAL IMAGE:TAG</code>. High severity: <code>trivy image --exit-code 0 --severity HIGH --format json | gitlab-issue-creator</code>. Database: Trivy downloads CVE DB on each run — cache in a shared PVC for speed. Integration with Harbor: Harbor also runs Trivy on push — two independent scan points.",
+  g:["trivy image --exit-code 1 --severity CRITICAL","Creates GitLab issue for HIGH severity","CVE DB cached in shared PVC","Harbor also scans on push (independent)","Renovate: opens MR for updated base image"]},
+
+"ci-renovate":{l:"Layer 8 · CI/CD Platform",t:"Renovate · dependency automation",c:"var(--ci)",
+  d:"Renovate scans all Git repositories for outdated dependencies: Helm chart versions, container image digests, and Kubernetes manifests. When a new version is available it opens a merge request in GitLab, which triggers the full CI pipeline again. Combined with ArgoCD auto-sync this creates a fully automated dependency update loop with platform engineer approval at the MR stage.",
+  i:"Renovate config (<code>renovate.json</code>): <code>enabledManagers: ['helm-values', 'dockerfile', 'kubernetes']</code>. Schedule: daily. Auto-merge: enable for patch updates with passing CI. Harbor image digest tracking: Renovate watches Harbor for new image tags matching semver patterns. Helm chart updates: scans Chart.yaml and values.yaml for chart versions. MR description includes changelog and CVE impact from Trivy.",
+  g:["renovate.json (repo config)","Managers: helm-values, dockerfile, kubernetes","Daily scan schedule","Auto-merge: patch updates (CI passing)","MR includes changelog + CVE delta"]},
+
+"ci-karmada":{l:"Layer 8 · CI/CD Platform · Conditional",t:"Karmada · multi-cluster scheduling",c:"var(--ci)",
+  d:"Karmada adds dynamic workload scheduling and automatic cluster failover on top of ArgoCD. ArgoCD decides what to deploy and enforces GitOps; Karmada decides which cluster receives the workload based on capacity, affinity, and health. ArgoCD targets the Karmada control plane — Karmada handles distribution to member clusters. Add only when you need active-active DR or 10+ clusters with capacity-aware placement.",
+  i:"Karmada is NOT a replacement for ArgoCD — they are complementary layers. ArgoCD registers the Karmada control plane as its target cluster (not individual member clusters). Karmada PropagationPolicy CRD: <code>spec.placement.clusterAffinity.clusterNames: [cluster-1, cluster-2]</code>. Failover: <code>spec.failover.application.decisionConditions.tolerationSeconds: 60</code>. Dynamic scheduling: <code>replicaSchedulingType: Divided</code> splits replicas across clusters by capacity.",
+  g:["karmadactl join (register clusters)","PropagationPolicy CRD","ArgoCD targets Karmada API server","Failover: tolerationSeconds: 60","Add only for active-active DR / 10+ clusters"]},
+
+/* ── LAYER 9: DEPLOYMENT MODELS ── */
+"m1":{l:"Layer 9 · Workload Plane · Model 1",t:"vCluster IDP — self-service developer environments",c:"var(--idp)",
+  d:"Shared host cluster with virtual Kubernetes clusters per team. Each vCluster has its own API server, CRDs, and RBAC. Developers get cluster-admin inside their vCluster with zero visibility to the host or other tenants. Provisioned via Backstage portal — no kubectl, no YAML, no ticket required.",
+  i:"vCluster = Deployment (virtual CP) + StatefulSet (syncer) in a host namespace. Syncer translates vCluster resources to host resources. Tiers: S (4 vCPU / 8 GB / 50 GB Ceph), M (8 vCPU / 16 GB / 100 GB), L (16 vCPU / 32 GB / 200 GB). Sleep: vCluster Platform controller watches API activity — scales to zero after idle threshold. Resume: under 30s. Enterprise examples: Atlan reduced 100 dedicated clusters to 1 host cluster with vCluster.",
+  g:["vCluster Helm chart","Git path: clusters/tenants/*.yaml","S/M/L tiers (ResourceQuota + Ceph quotas)","Sleep mode (scale-to-zero)","Backstage scaffolder provisioning"]},
+
+"m2":{l:"Layer 9 · Workload Plane · Model 2",t:"Mission Critical — dedicated cluster per certified workload",c:"var(--sec)",
+  d:"Dedicated Kubernetes cluster per certification boundary. Own etcd, own API server, own kernel — full isolation. Required for workloads where the certification boundary must be provable to an auditor: IEC 62443 (OT/ICS), EN 50126/50128 (railway), IEC 61511 (process safety). The platform still manages it — only the application team owns the certification.",
+  i:"CAPI provisions the dedicated cluster from <code>clusters/dedicated/WORKLOAD.yaml</code>. Kubernetes version is independent from other clusters — CAB-approved upgrades on a slow, controlled lifecycle. Dedicated node hardware: no shared physical hosts with other workloads. ArgoCD deploys workloads, Vault delivers secrets, Keycloak provides SSO — all via Cluster Mesh from management plane. Application team owns the change process and certification; platform team owns infrastructure.",
+  g:["Git path: clusters/dedicated/*.yaml","Own K8s version lifecycle","CAB-governed upgrade process","IEC 62443 / EN 50126 / IEC 61511","Dedicated hardware (no sharing)"]},
+
+"m3":{l:"Layer 9 · Workload Plane · Model 3",t:"Large microservices — one prod cluster per domain",c:"var(--id)",
+  d:"Model 3 describes what sits <em>inside</em> each cluster in a Zalando-style multi-cluster estate — not an alternative to multi-cluster. At the domain level: each business domain gets a dedicated prod + nonprod cluster pair (payments, recommendations, logistics...). That is what produces 140+ clusters. At the team level inside each domain cluster: one large production cluster with namespace per team, 100s of services. Heavy cross-team traffic stays in-cluster — no Cluster Mesh overhead. vClusters appear only in the nonprod cluster for ephemeral dev environments.",
+  i:"Two levels operating simultaneously. Level 1 — across domains (multi-cluster): <code>clusters/dedicated/payments-prod.yaml</code> + <code>clusters/dedicated/payments-nonprod.yaml</code> per domain. Level 2 — inside each domain cluster (Model 3): namespace per team, <code>ns:checkout</code> owned by team-checkout, <code>ns:billing</code> owned by team-billing. ApplicationSet: one ArgoCD Application per service directory. Namespace RBAC: each team has admin rights to their namespace only — cannot reach other namespaces. Cilium L7 NetworkPolicy per service: explicit allow required for cross-namespace calls. Node pools per domain if resource profiles differ (e.g. GPU pool for ML inference in the same cluster).",
+  g:["Git path: clusters/dedicated/*.yaml","1 prod + 1 non-prod per domain (Zalando)","Namespace per team + Cilium L7","AppSet per service directory","vCluster for dev/staging only"]},
+
+"m4":{l:"Layer 9 · Workload Plane · Model 4",t:"KubeEdge — factory floors · substations · remote OT sites",c:"var(--obs)",
+  d:"Factory floors, retail stores, substations, and remote OT sites run KubeEdge EdgeCore — a lightweight agent with no cluster on the device. CloudCore runs in a workload cluster (ArgoCD managed). EdgeCore initiates an outbound WireGuard tunnel to CloudCore via Headscale — zero inbound ports on the edge device. If the tunnel drops, pods already running on the device keep running (cached desired state).",
+  i:"CloudCore in <code>clusters/dedicated/edge-cloud.yaml</code>. Edge site: <code>edge/sites/SITE.yaml</code> registers the EdgeCore device. DeviceTwin CRD bridges OPC-UA / Modbus industrial protocols to Kubernetes objects. SecureBoot + TPM: device identity cryptographically bound to hardware — compromised device cannot register with Headscale. Observability: Prometheus agent pushes metrics outbound only. DaemonSets: not standard on edge nodes — use static Pod manifests for edge-specific observability.",
+  g:["Git path: edge/sites/*.yaml","CloudCore (workload cluster, ArgoCD)","EdgeCore (device, no K8s)","DeviceTwin CRD (OPC-UA / Modbus)","SecureBoot + TPM (device attestation)"]},
+
+"m5":{l:"Layer 9 · Workload Plane · Model 5",t:"KubeVirt — legacy VM migration",c:"var(--stor)",
+  d:"Legacy workloads that cannot be containerised run as VirtualMachine CRDs in Kubernetes. QEMU/KVM-backed, managed via GitOps. Import from VMware via Forklift. Multus CNI on the kubevirt node pool provides multi-NIC attachment — VMs attach to both management and data plane networks. Model 5 is a compatibility lane, not an end state — all VM workloads should have an explicit modernisation path toward Models 1–3.",
+  i:"Git path: <code>vms/workloads/WORKLOAD.yaml</code> (VirtualMachine CRD). Dedicated node pool: <code>workload-type=kubevirt:NoSchedule</code> taint + label. KVM required: nested virt must be tested if worker nodes are VMs — bare-metal preferred. Forklift import: MTV (Migration Toolkit for Virtualization) migrates from VMware vSphere, oVirt, OVA, OpenStack. Multus on kubevirt pool: <code>NetworkAttachmentDefinition</code> CRD for secondary NICs. Ceph RBD PVC for VM disk — supports live migration.",
+  g:["Git path: vms/workloads/*.yaml","VirtualMachine CRD (KubeVirt)","Forklift (VMware/oVirt/OVA import)","Multus CNI (multi-NIC for VMs)","workload-type=kubevirt node taint"]}
+};
+</script>
+</body>
+</html>
