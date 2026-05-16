@@ -11,33 +11,33 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #080b10;
-    --bg2:       #0e1320;
-    --bg3:       #141a2c;
-    --border:    #1e2d48;
-    --border2:   #2e4468;
-    --text:      #e8eeff;
-    --text2:     #8ba8d4;
-    --text3:     #4a5e80;
-    --accent:    #5aabff;
-    --green:     #2ecc80;
-    --green-bg:  #071a12;
-    --green-bd:  #0e4028;
-    --amber:     #f0a830;
-    --amber-bg:  #1a1005;
-    --amber-bd:  #4a2e08;
-    --purple:    #a87ef8;
-    --purple-bg: #100820;
-    --purple-bd: #2e1858;
-    --teal:      #1ad4b8;
-    --teal-bg:   #041414;
-    --teal-bd:   #0e3838;
+    --bg:        #0a1628;
+    --bg2:       #112240;
+    --bg3:       #0d1b33;
+    --border:    #1e3a5f;
+    --border2:   #2a4a6e;
+    --text:      #cdd6f4;
+    --text2:     #7a9cc0;
+    --text3:     #5a7ea8;
+    --accent:    #7eb8f7;
+    --green:     #7de8a0;
+    --green-bg:  #071a10;
+    --green-bd:  #0e3a20;
+    --amber:     #ffd080;
+    --amber-bg:  #1a1205;
+    --amber-bd:  #4a3008;
+    --purple:    #c59dff;
+    --purple-bg: #120a20;
+    --purple-bd: #301858;
+    --teal:      #5ee8d8;
+    --teal-bg:   #041412;
+    --teal-bd:   #0e3430;
   }
 
   html { scroll-behavior: smooth; }
   body {
     background: var(--bg);
-    background-image: radial-gradient(ellipse at 50% 0%, rgba(30,60,120,.18) 0%, transparent 70%);
+    background-image: radial-gradient(ellipse at 50% 0%, rgba(126,184,247,.10) 0%, transparent 65%);
     color: var(--text);
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 14px;
@@ -66,7 +66,7 @@
   .hero-name {
     font-size: 26px;
     font-weight: 600;
-    color: #f0f6ff;
+    color: #e0e8ff;
     letter-spacing: -0.02em;
   }
   .hero-title {
@@ -75,7 +75,7 @@
     font-weight: 400;
   }
   .hero-title strong {
-    color: #c8d8f4;
+    color: #a8c4e8;
     font-weight: 500;
   }
   .hero-links {
@@ -107,7 +107,7 @@
   .hero-meta {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
-    color: #a0b8d8;
+    color: var(--text2);
     text-align: right;
     line-height: 1.8;
   }
@@ -144,7 +144,7 @@
   .section-title {
     font-size: 15px;
     font-weight: 600;
-    color: #f0f6ff;
+    color: #cdd6f4;
     letter-spacing: 0.005em;
   }
   .section-sub {
@@ -177,7 +177,7 @@
   .project-card:hover:not(.placeholder) {
     border-color: var(--border2);
     background: var(--bg3);
-    box-shadow: 0 4px 32px rgba(10,30,80,.5);
+    box-shadow: 0 4px 32px rgba(126,184,247,.08);
   }
   .project-card.placeholder {
     opacity: 0.5;
@@ -188,17 +188,17 @@
   .card-title {
     font-size: 15px;
     font-weight: 600;
-    color: #f0f6ff;
+    color: #cdd6f4;
   }
   .card-subtitle {
     font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;
-    color: #4a6898;
+    color: var(--text3);
     letter-spacing: 0.02em;
   }
   .card-desc {
     font-size: 12px;
-    color: #7a9ac0;
+    color: var(--text2);
     line-height: 1.65;
   }
   .card-layers {
@@ -216,7 +216,8 @@
     font-family: 'IBM Plex Mono', monospace;
     font-size: 10px;
     font-weight: 500;
-    color: #3a6090;
+    color: var(--accent);
+    opacity: 0.75;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     min-width: 110px;
@@ -224,7 +225,7 @@
   }
   .layer-tools {
     font-size: 12px;
-    color: #8aaccc;
+    color: var(--text2);
   }
   .card-tags {
     display: flex;
@@ -236,11 +237,11 @@
     font-family: 'IBM Plex Mono', monospace;
     font-size: 10px;
     font-weight: 500;
-    background: #0e1828;
-    color: #5a80b8;
+    background: var(--bg3);
+    color: var(--accent);
     padding: 2px 8px;
     border-radius: 3px;
-    border: 1px solid #1e3050;
+    border: 1px solid var(--border);
     letter-spacing: 0.04em;
   }
   .tag.green  { background: var(--green-bg);  color: #28b870; border-color: var(--green-bd); }
@@ -264,7 +265,7 @@
     text-transform: uppercase;
   }
   .status.live    { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); }
-  .status.planned { background: #151a28; color: var(--text3); border: 1px solid var(--border); }
+  .status.planned { background: var(--bg3); color: var(--text3); border: 1px solid var(--border); }
   .status.wip     { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-bd); }
   .card-type {
     font-family: 'IBM Plex Mono', monospace;
@@ -307,7 +308,7 @@
   }
   .about-text {
     font-size: 12px;
-    color: #7a9ac0;
+    color: var(--text2);
     line-height: 1.65;
   }
   .about-text a { color: var(--accent); text-decoration: none; }
@@ -323,9 +324,9 @@
     gap: 8px;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
-    color: #3a4e6a;
+    color: var(--text2);
   }
-  footer a { color: #3a4e6a; text-decoration: none; }
+  footer a { color: var(--text2); text-decoration: none; }
   footer a:hover { color: var(--accent); }
 
   @media (max-width: 640px) {
@@ -443,7 +444,7 @@
           A production-grade Kubernetes platform built on an infrastructure-agnostic architecture —
           the same platform runs on Proxmox, VMware, bare-metal PXE, or any cloud VM without changing
           a single layer above the hypervisor. One management plane serves all five deployment models:
-          vCluster IDP, mission-critical dedicated clusters, large microservices, KubeEdge factory sites, and KubeVirt VM migration.
+          vCluster IDP, mission-critical dedicated clusters, large microservices based platforms, KubeEdge factory sites, and KubeVirt VM migration.
           Validated against the Sidero Talos Linux Reference Architecture 2025.
           <div class="card-layers">
             <div class="card-layer">
