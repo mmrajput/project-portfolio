@@ -11,23 +11,23 @@
   --bg:#0a1628;--surface:#112240;--surface2:#0d1b33;--border:#1e3a5f;
   --text:#cdd6f4;--muted:#7a9cc0;--dim:#2a4a6e;
   --virt:#7eb8f7;--gitops:#7de8a0;--obs:#ffd080;--sec:#ff7096;
-  --stor:#5ee8d8;--id:#c59dff;--ha:#f87fa0;--idp:#34d4a0;--idp-alt:#7effd4;
-  --ci:#ffb86c;--infra:#7eb8f7;
+  --stor:#5ee8d8;--id:#c59dff;--ha:#5ed8f0;--idp:#7de8a0;--idp-alt:#7de8a0;
+  --ci:#ffb067;--infra:#7eb8f7;--app:#5ed8f0;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(126,184,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(126,184,247,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
-body::after{content:'';position:fixed;width:800px;height:800px;top:-300px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(52,212,160,.05) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;width:700px;height:700px;top:-250px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(126,184,247,.07) 0%,transparent 70%);pointer-events:none;z-index:0}
 .page{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:48px 24px 80px;perspective:1200px}
 
 /* ── HEADER ── */
 header{text-align:center;margin-bottom:24px;animation:fadeDown .8s ease both}
 .header-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:var(--surface);padding:5px 14px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;cursor:pointer;text-decoration:none}
-.header-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--idp);animation:pulse 2s ease infinite;flex-shrink:0}
-h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(135deg,#e8f0ff 30%,var(--idp) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:8px}
+.header-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gitops);animation:pulse 2s ease infinite;flex-shrink:0}
+h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(135deg,#e8f0ff 30%,var(--virt) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:8px}
 .subtitle{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
-.tagline{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--idp);border:1px solid rgba(52,212,160,.3);background:rgba(52,212,160,.05);padding:5px 16px;display:inline-block;margin-bottom:16px}
+.tagline{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--idp);border:1px solid rgba(125,232,160,.3);background:rgba(125,232,160,.05);padding:5px 16px;display:inline-block;margin-bottom:16px}
 .hw-bar{display:inline-flex;gap:0;border:1px solid var(--border);overflow:hidden;flex-wrap:wrap}
 .hw-chip{padding:5px 12px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);border-right:1px solid var(--border);background:var(--surface);letter-spacing:.05em}
 .hw-chip:last-child{border-right:none}
@@ -49,8 +49,8 @@ h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:
 .bt-phase.pivot{background:rgba(255,112,150,.03)}
 .bt-phase.pivot:hover{background:rgba(255,112,150,.07)}
 .bt-phase.pivot .bt-title{color:var(--sec)}
-.bt-phase.gitops{background:rgba(52,212,160,.03)}
-.bt-phase.gitops:hover{background:rgba(52,212,160,.07)}
+.bt-phase.gitops{background:rgba(125,232,160,.03)}
+.bt-phase.gitops:hover{background:rgba(125,232,160,.07)}
 .bt-phase.gitops .bt-title{color:var(--idp)}
 .bt-boundary{display:flex;gap:12px;justify-content:center;margin-bottom:36px;flex-wrap:wrap}
 .bt-badge{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.1em;padding:3px 10px;border:1px solid;text-transform:uppercase}
@@ -66,7 +66,7 @@ h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:
 .plane-body{padding:20px}
 .plane-cp{border-color: rgba(126,184,247,.45);background: rgba(126,184,247,.04);animation-delay:.05s}
 .plane-cp .plane-name{color:var(--virt)}
-.plane-mp{border-color: rgba(52,212,160,.45);background: rgba(52,212,160,.04);animation-delay:.1s}
+.plane-mp{border-color: rgba(125,232,160,.45);background: rgba(125,232,160,.04);animation-delay:.1s}
 .plane-mp .plane-name{color:var(--idp)}
 .plane-wp{border-color: rgba(255,208,128,.45);background: rgba(255,208,128,.04);animation-delay:.15s}
 .plane-wp .plane-name{color:var(--obs)}
@@ -82,7 +82,7 @@ h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:
 .layer-title-group{display:flex;align-items:center;gap:10px}
 .layer-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .layer-name{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
-.layer-toggle{font-family:'Share Tech Mono',monospace;font-size:18px;color:rgba(255,255,255,.4);transition:transform .3s, color .2s;line-height:1}
+.layer-toggle{font-family:'Share Tech Mono',monospace;font-size:18px;color:var(--gitops);transition:transform .3s, color .2s;line-height:1;opacity:.85}
 .layer.collapsed .layer-toggle{transform:rotate(-90deg)}
 .layer-body{padding:14px 16px 16px;overflow:hidden}
 .layer.collapsed .layer-body{display:none}
@@ -103,30 +103,30 @@ h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:
 .card-name{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.05em;margin-bottom:4px}
 .card-desc{font-size:11px;color:var(--muted);line-height:1.55}
 .card-tag{display:inline-block;margin-top:6px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border:1px solid;font-family:'Share Tech Mono',monospace;opacity:.75}
-.card-new{position:absolute;top:6px;right:6px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.08em;padding:1px 5px;background:rgba(52,212,160,.15);border:1px solid rgba(52,212,160,.4);color:var(--idp);text-transform:uppercase}
+.card-new{position:absolute;top:6px;right:6px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.08em;padding:1px 5px;background:rgba(125,232,160,.15);border:1px solid rgba(125,232,160,.4);color:var(--idp);text-transform:uppercase}
 .card-changed{position:absolute;top:6px;right:6px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.08em;padding:1px 5px;background:rgba(255,112,150,.12);border:1px solid rgba(255,112,150,.4);color:var(--sec);text-transform:uppercase}
 
 /* layer color themes */
 .l-infra .card::before{background:var(--virt)}.l-infra .card:hover{border-color:rgba(126,184,247,.5);box-shadow:0 4px 20px rgba(126,184,247,.08)}.l-infra .card-name{color:var(--virt)}.l-infra .card-tag{border-color:rgba(126,184,247,.4);color:var(--virt)}
-.l-ha .card::before{background:var(--ha)}.l-ha .card:hover{border-color:rgba(248,127,160,.5);box-shadow:0 4px 20px rgba(248,127,160,.08)}.l-ha .card-name{color:var(--ha)}.l-ha .card-tag{border-color:rgba(248,127,160,.4);color:var(--ha)}
+.l-ha .card::before{background:var(--ha)}.l-ha .card:hover{border-color:rgba(94,216,240,.5);box-shadow:0 4px 20px rgba(94,216,240,.08)}.l-ha .card-name{color:var(--ha)}.l-ha .card-tag{border-color:rgba(94,216,240,.4);color:var(--ha)}
 .l-gitops2 .card::before{background:var(--gitops)}.l-gitops2 .card:hover{border-color:rgba(125,232,160,.5);box-shadow:0 4px 20px rgba(125,232,160,.08)}.l-gitops2 .card-name{color:var(--gitops)}.l-gitops2 .card-tag{border-color:rgba(125,232,160,.4);color:var(--gitops)}
 .l-stor .card::before{background:var(--stor)}.l-stor .card:hover{border-color:rgba(94,232,216,.5);box-shadow:0 4px 20px rgba(94,232,216,.08)}.l-stor .card-name{color:var(--stor)}.l-stor .card-tag{border-color:rgba(94,232,216,.4);color:var(--stor)}
 .l-id .card::before{background:var(--id)}.l-id .card:hover{border-color:rgba(197,157,255,.5);box-shadow:0 4px 20px rgba(197,157,255,.08)}.l-id .card-name{color:var(--id)}.l-id .card-tag{border-color:rgba(197,157,255,.4);color:var(--id)}
 .l-obs .card::before{background:var(--obs)}.l-obs .card:hover{border-color:rgba(255,208,128,.5);box-shadow:0 4px 20px rgba(255,208,128,.08)}.l-obs .card-name{color:var(--obs)}.l-obs .card-tag{border-color:rgba(255,208,128,.4);color:var(--obs)}
 .l-sec .card::before{background:var(--sec)}.l-sec .card:hover{border-color:rgba(255,112,150,.5);box-shadow:0 4px 20px rgba(255,112,150,.08)}.l-sec .card-name{color:var(--sec)}.l-sec .card-tag{border-color:rgba(255,112,150,.4);color:var(--sec)}
-.l-ci .card::before{background:var(--ci)}.l-ci .card:hover{border-color:rgba(255,184,108,.5);box-shadow:0 4px 20px rgba(255,184,108,.08)}.l-ci .card-name{color:var(--ci)}.l-ci .card-tag{border-color:rgba(255,184,108,.4);color:var(--ci)}
-.l-idp .card::before{background:var(--idp)}.l-idp .card:hover{border-color:rgba(52,212,160,.5);box-shadow:0 4px 20px rgba(52,212,160,.1)}.l-idp .card-name{color:var(--idp)}.l-idp .card-tag{border-color:rgba(52,212,160,.4);color:var(--idp)}
+.l-ci .card::before{background:var(--ci)}.l-ci .card:hover{border-color:rgba(255,176,103,.5);box-shadow:0 4px 20px rgba(255,176,103,.08)}.l-ci .card-name{color:var(--ci)}.l-ci .card-tag{border-color:rgba(255,176,103,.4);color:var(--ci)}
+.l-idp .card::before{background:var(--idp)}.l-idp .card:hover{border-color:rgba(125,232,160,.5);box-shadow:0 4px 20px rgba(125,232,160,.1)}.l-idp .card-name{color:var(--idp)}.l-idp .card-tag{border-color:rgba(125,232,160,.4);color:var(--idp)}
 
 /* scale bar */
 .scale-bar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
 .sc{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.08em;padding:3px 10px;border:1px solid;text-transform:uppercase}
 .sc.p{border-color:rgba(126,184,247,.4);color:var(--virt);background:rgba(126,184,247,.04)}
-.sc.g{border-color:rgba(52,212,160,.4);color:var(--idp);background:rgba(52,212,160,.04)}
+.sc.g{border-color:rgba(125,232,160,.4);color:var(--idp);background:rgba(125,232,160,.04)}
 .sc.e{border-color:rgba(197,157,255,.4);color:var(--id);background:rgba(197,157,255,.04)}
 
 /* plane connector */
 .plane-connector{display:flex;justify-content:center;align-items:center;height:20px;position:relative;margin:0}
-.plane-connector::before{content:'';position:absolute;width:1px;top:0;bottom:0;left:50%;background:linear-gradient(to bottom,rgba(52,212,160,.4),transparent)}
+.plane-connector::before{content:'';position:absolute;width:1px;top:0;bottom:0;left:50%;background:linear-gradient(to bottom,rgba(125,232,160,.4),transparent)}
 
 /* ── WORKLOAD MODELS ── */
 .models-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:0}
@@ -143,7 +143,7 @@ h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:
 .model-diff span{display:block;opacity:.7;margin-bottom:2px}
 .model-git{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);margin-top:6px;opacity:.6;letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-.model-1{border-color:rgba(52,212,160,.3)}.model-1:hover{border-color:rgba(52,212,160,.6);box-shadow:0 6px 24px rgba(52,212,160,.08)}.model-1 .model-num{color:var(--idp)}.model-1 .model-title{color:var(--idp)}.model-1 .model-tag{border-color:rgba(52,212,160,.4);color:var(--idp)}
+.model-1{border-color:rgba(125,232,160,.3)}.model-1:hover{border-color:rgba(125,232,160,.6);box-shadow:0 6px 24px rgba(125,232,160,.08)}.model-1 .model-num{color:var(--idp)}.model-1 .model-title{color:var(--idp)}.model-1 .model-tag{border-color:rgba(125,232,160,.4);color:var(--idp)}
 .model-2{border-color:rgba(255,112,150,.3)}.model-2:hover{border-color:rgba(255,112,150,.6);box-shadow:0 6px 24px rgba(255,112,150,.08)}.model-2 .model-num{color:var(--sec)}.model-2 .model-title{color:var(--sec)}.model-2 .model-tag{border-color:rgba(255,112,150,.4);color:var(--sec)}
 .model-3{border-color:rgba(197,157,255,.3)}.model-3:hover{border-color:rgba(197,157,255,.6);box-shadow:0 6px 24px rgba(197,157,255,.08)}.model-3 .model-num{color:var(--id)}.model-3 .model-title{color:var(--id)}.model-3 .model-tag{border-color:rgba(197,157,255,.4);color:var(--id)}
 .model-4{border-color:rgba(255,208,128,.3)}.model-4:hover{border-color:rgba(255,208,128,.6);box-shadow:0 6px 24px rgba(255,208,128,.08)}.model-4 .model-num{color:var(--obs)}.model-4 .model-title{color:var(--obs)}.model-4 .model-tag{border-color:rgba(255,208,128,.4);color:var(--obs)}
@@ -154,7 +154,7 @@ h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:
 .git-path{padding:8px 12px;border-right:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.04em}
 .git-path:last-child{border-right:none}
 .git-path-key{color:var(--muted);margin-bottom:2px;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
-.git-path-val{color:var(--idp)}
+.git-path-val{color:var(--gitops)}
 @media(max-width:700px){.git-bar{grid-template-columns:1fr 1fr}}
 
 /* ── MODAL ── */
@@ -176,7 +176,7 @@ h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,4vw,44px);font-weight:
 
 /* ── FOOTER ── */
 footer{margin-top:48px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;animation:fadeUp .6s ease .6s both}
-footer a{color:var(--idp);text-decoration:none}
+footer a{color:var(--virt);text-decoration:none}
 footer a:hover{text-decoration:underline}
 
 /* ── ANIMATIONS ── */
@@ -234,7 +234,7 @@ footer a:hover{text-decoration:underline}
 <div class="bt-boundary">
   <span class="bt-badge" style="border-color:rgba(126,184,247,.4);color:var(--virt)">Phases 1–3: imperative zone</span>
   <span class="bt-badge" style="border-color:rgba(255,112,150,.4);color:var(--sec)">Phase 4: pivot · last manual step</span>
-  <span class="bt-badge" style="border-color:rgba(52,212,160,.4);color:var(--idp)">Phase 5 onward: pure GitOps · no kubectl · no helm</span>
+  <span class="bt-badge" style="border-color:rgba(125,232,160,.4);color:var(--idp)">Phase 5 onward: pure GitOps · no kubectl · no helm</span>
 </div>
 
 <!-- ══════════════════════════════════════════════
@@ -292,27 +292,27 @@ footer a:hover{text-decoration:underline}
           <span class="layer-name" style="color:var(--ha)">Layer 2 · High Availability · etcd · kube-vip · KubePrism · MetalLB</span>
         </div>
         <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ha);border:1px solid rgba(248,127,160,.3);padding:2px 7px;text-transform:uppercase">no single point of failure</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ha);border:1px solid rgba(94,216,240,.3);padding:2px 7px;text-transform:uppercase">no single point of failure</span>
           <span class="layer-toggle">▾</span>
         </div>
       </div>
       <div class="layer-body">
-        <div class="ldesc" style="border-color:rgba(248,127,160,.3)">HA is a property of the cluster, not a single component. Control plane: 3 etcd members for quorum. kube-vip for the management cluster API VIP (low load). MetalLB distributing to all 3 CP nodes for production workload clusters (high API load — Sidero warning: kube-vip alone serves only one CP node at a time). KubePrism mandatory on every node — keeps workers connected to the API server even if the external load balancer fails.</div>
+        <div class="ldesc" style="border-color:rgba(94,216,240,.3)">HA is a property of the cluster, not a single component. Control plane: 3 etcd members for quorum. kube-vip for the management cluster API VIP (low load). MetalLB distributing to all 3 CP nodes for production workload clusters (high API load — Sidero warning: kube-vip alone serves only one CP node at a time). KubePrism mandatory on every node — keeps workers connected to the API server even if the external load balancer fails.</div>
         <div class="scale-bar"><span class="sc p">Pilot: single CP — accepted risk</span><span class="sc g">Growth: 3 CP nodes · 2+ physical hosts</span><span class="sc e">Enterprise: 3 CP · MetalLB · etcd quorum · KubePrism</span></div>
-        <div class="pfl" style="color:var(--ha);border-color:var(--ha);background:rgba(248,127,160,.03);margin-top:0">Control plane HA · etcd quorum</div>
+        <div class="pfl" style="color:var(--ha);border-color:var(--ha);background:rgba(94,216,240,.03);margin-top:0">Control plane HA · etcd quorum</div>
         <div class="cards cards-4 l-ha">
           <div class="card" onclick="openModal('ha-etcd')"><div class="card-name">etcd quorum</div><div class="card-desc">3 CP nodes · tolerates 1 failure<br>Quorum = 2/3 · Talos auto-manages</div><span class="card-tag">quorum</span></div>
           <div class="card" onclick="openModal('ha-vip')"><div class="card-name">kube-vip</div><div class="card-desc">Management cluster API VIP<br>Low-load only — active/passive</div><span class="card-tag">load-balancing</span><span class="card-changed">mgmt only</span></div>
           <div class="card" onclick="openModal('ha-metallb')"><div class="card-name">MetalLB</div><div class="card-desc">Workload clusters · L2/BGP<br>Distributes to ALL 3 CP nodes</div><span class="card-tag">load-balancing</span></div>
           <div class="card" onclick="openModal('ha-kubeprism')"><div class="card-name">KubePrism</div><div class="card-desc">Per-node API LB · 127.0.0.1:7445<br>Workers reach API if external LB fails</div><span class="card-tag">resilience</span><span class="card-new">mandatory</span></div>
         </div>
-        <div class="pfl" style="color:var(--ha);border-color:var(--ha);background:rgba(248,127,160,.03);margin-top:12px">Network HA · Cilium eBPF · ExternalDNS</div>
+        <div class="pfl" style="color:var(--ha);border-color:var(--ha);background:rgba(94,216,240,.03);margin-top:12px">Network HA · Cilium eBPF · ExternalDNS</div>
         <div class="cards cards-3 l-ha">
           <div class="card" onclick="openModal('ha-cilium-ha')"><div class="card-name">Cilium kube-proxy replacement</div><div class="card-desc">eBPF per node · no central proxy<br>Node loss does not affect routing</div><span class="card-tag">networking</span></div>
           <div class="card" onclick="openModal('ha-externaldns')"><div class="card-name">ExternalDNS</div><div class="card-desc">Auto DNS records from Services<br>LoadBalancer + Ingress sync</div><span class="card-tag">dns</span></div>
           <div class="card" onclick="openModal('ha-spread')"><div class="card-name">Failure domain spread</div><div class="card-desc">CP nodes on separate physical hosts<br>Host failure loses 1 of 3 — survives</div><span class="card-tag">topology</span></div>
         </div>
-        <div class="pfl" style="color:var(--ha);border-color:var(--ha);background:rgba(248,127,160,.03);margin-top:12px">Management plane HA · replicated services</div>
+        <div class="pfl" style="color:var(--ha);border-color:var(--ha);background:rgba(94,216,240,.03);margin-top:12px">Management plane HA · replicated services</div>
         <div class="cards cards-4 l-ha">
           <div class="card" onclick="openModal('ha-argocd')"><div class="card-name">ArgoCD HA</div><div class="card-desc">3 app-controller replicas · Redis HA<br>No single pod dependency</div><span class="card-tag">gitops</span></div>
           <div class="card" onclick="openModal('ha-vault')"><div class="card-name">Vault HA (Raft)</div><div class="card-desc">3 Vault nodes · integrated Raft storage<br>Active/standby · auto-unseal</div><span class="card-tag">secrets</span></div>
@@ -339,7 +339,7 @@ footer a:hover{text-decoration:underline}
         <div class="plane-desc">Layers 3–8 · fixed · serves all workload clusters and deployment models · never runs tenant workloads</div>
       </div>
     </div>
-    <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--idp);border:1px solid rgba(52,212,160,.3);padding:3px 10px;text-transform:uppercase;letter-spacing:.1em">shared services · all clusters</span>
+    <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--idp);border:1px solid rgba(125,232,160,.3);padding:3px 10px;text-transform:uppercase;letter-spacing:.1em">shared services · all clusters</span>
   </div>
   <div class="plane-body">
 
@@ -497,8 +497,8 @@ footer a:hover{text-decoration:underline}
         </div>
       </div>
       <div class="layer-body">
-        <div class="ldesc" style="border-color:rgba(255,184,108,.3)">The CI security gate chain runs in strict order: Gitleaks (pre-build secret scan) → build → Trivy CVE scan (fail on Critical) → Harbor push + Cosign sign → Kyverno admission verify. Renovate watches Harbor image digests and Helm chart repos, opening MRs automatically when updates are available. Karmada adds multi-cluster workload scheduling above ArgoCD — needed only for active-active DR or capacity-aware placement across 10+ clusters.</div>
-        <div class="pfl" style="color:var(--ci);border-color:var(--ci);background:rgba(255,184,108,.03);margin-top:0">CI pipeline · security gate order: Gitleaks → build → Trivy → Harbor → Kyverno</div>
+        <div class="ldesc" style="border-color:rgba(255,176,103,.3)">The CI security gate chain runs in strict order: Gitleaks (pre-build secret scan) → build → Trivy CVE scan (fail on Critical) → Harbor push + Cosign sign → Kyverno admission verify. Renovate watches Harbor image digests and Helm chart repos, opening MRs automatically when updates are available. Karmada adds multi-cluster workload scheduling above ArgoCD — needed only for active-active DR or capacity-aware placement across 10+ clusters.</div>
+        <div class="pfl" style="color:var(--ci);border-color:var(--ci);background:rgba(255,176,103,.03);margin-top:0">CI pipeline · security gate order: Gitleaks → build → Trivy → Harbor → Kyverno</div>
         <div class="cards cards-4 l-ci">
           <div class="card" onclick="openModal('ci-runner')"><div class="card-name">GitLab Runner</div><div class="card-desc">Kubernetes executor · ephemeral pods<br>Image promotion pipeline</div><span class="card-tag">ci/cd</span></div>
           <div class="card" onclick="openModal('ci-trivy')"><div class="card-name">Trivy CVE gate</div><div class="card-desc">Scan on every build · fail on Critical<br>Blocks push to Harbor</div><span class="card-tag">security</span></div>
