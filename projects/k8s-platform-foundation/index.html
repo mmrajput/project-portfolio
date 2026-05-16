@@ -87,7 +87,7 @@ body::after {
 /* ── HEADER ── */
 header {
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: 36px;
   animation: fadeDown 0.8s ease both;
 }
 
@@ -224,9 +224,10 @@ h1 {
 
 .layer-toggle {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 14px;
-  color: var(--muted);
+  font-size: 18px;
+  color: var(--gitops);
   transition: transform 0.3s;
+  opacity: 0.85;
 }
 
 .layer.collapsed .layer-toggle { transform: rotate(-90deg); }
@@ -703,7 +704,10 @@ footer a:hover { text-decoration: underline; }
 
   <!-- HEADER -->
   <header>
-    <a href="https://github.com/mmrajput/kubernetes-single-cluster" target="_blank" rel="noopener" style="text-decoration:none;"><div class="header-badge">github.com/mmrajput/kubernetes-single-cluster</div></a>
+    <div style="display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:0;">
+      <a href="https://github.com/mmrajput/kubernetes-single-cluster" target="_blank" rel="noopener" style="text-decoration:none;"><div class="header-badge">github.com/mmrajput/kubernetes-single-cluster</div></a>
+      <a href="https://grafana.mmrajputhomelab.org/public-dashboards/dcd767cc02104739a6075887aa2451ce" target="_blank" rel="noopener" style="text-decoration:none;"><div class="header-badge" style="border-color:rgba(255,208,128,0.35);color:var(--obs);"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--obs);animation:pulse 2s ease infinite;flex-shrink:0;"></span>&nbsp;Grafana Dashboard</div></a>
+    </div>
     <h1>Kubernetes Platform Engineering<br>Foundation</h1>
     <p class="subtitle">Logical Architecture · All Phases Complete</p>
     <div class="hw-bar">
@@ -712,10 +716,29 @@ footer a:hover { text-decoration: underline; }
     </div>
   </header>
 
+  <!-- PHASE TIMELINE -->
+  <div class="phase-timeline" style="margin-top:0;margin-bottom:32px;">
+    <div class="pt-title">// Phase Progression</div>
+    <div class="pt-row">
+      <div class="pt-phase done"><span class="pt-num">Ph.0</span><span class="pt-label">Planning</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.1</span><span class="pt-label">DevEnv</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.2</span><span class="pt-label">Proxmox</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.3</span><span class="pt-label">VMs</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.4</span><span class="pt-label">Kubernetes</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.5</span><span class="pt-label">GitOps</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.6</span><span class="pt-label">Observability</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.7</span><span class="pt-label">Security</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.8</span><span class="pt-label">Storage</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.9</span><span class="pt-label">Identity</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.10</span><span class="pt-label">Apps + CI/CD</span></div>
+      <div class="pt-phase done"><span class="pt-num">Ph.11</span><span class="pt-label">AI / LLM</span></div>
+    </div>
+  </div>
+
   <div class="diagram">
 
     <!-- 1 · VIRTUALIZATION -->
-    <div class="layer l-virt" id="l1">
+    <div class="layer l-virt collapsed" id="l1">
       <div class="layer-header" onclick="toggleLayer('l1')">
         <div class="layer-title-group">
           <div class="layer-dot" style="background:var(--virt)"></div>
@@ -748,7 +771,7 @@ footer a:hover { text-decoration: underline; }
     <div class="flow-connector"><div class="flow-dot"></div></div>
 
     <!-- 2 · GITOPS -->
-    <div class="layer l-gitops" id="l2">
+    <div class="layer l-gitops collapsed" id="l2">
       <div class="layer-header" onclick="toggleLayer('l2')">
         <div class="layer-title-group">
           <div class="layer-dot" style="background:var(--gitops)"></div>
@@ -781,7 +804,7 @@ footer a:hover { text-decoration: underline; }
     <div class="flow-connector"><div class="flow-dot"></div></div>
 
     <!-- 3 · OBSERVABILITY -->
-    <div class="layer l-obs" id="l3">
+    <div class="layer l-obs collapsed" id="l3">
       <div class="layer-header" onclick="toggleLayer('l3')">
         <div class="layer-title-group">
           <div class="layer-dot" style="background:var(--obs)"></div>
@@ -819,7 +842,7 @@ footer a:hover { text-decoration: underline; }
     <div class="flow-connector"><div class="flow-dot"></div></div>
 
     <!-- 4 · SECURITY -->
-    <div class="layer l-sec" id="l4">
+    <div class="layer l-sec collapsed" id="l4">
       <div class="layer-header" onclick="toggleLayer('l4')">
         <div class="layer-title-group">
           <div class="layer-dot" style="background:var(--sec)"></div>
@@ -877,7 +900,7 @@ footer a:hover { text-decoration: underline; }
     <div class="flow-connector"><div class="flow-dot"></div></div>
 
     <!-- 5 · STORAGE -->
-    <div class="layer l-stor" id="l5">
+    <div class="layer l-stor collapsed" id="l5">
       <div class="layer-header" onclick="toggleLayer('l5')">
         <div class="layer-title-group">
           <div class="layer-dot" style="background:var(--stor)"></div>
@@ -910,7 +933,7 @@ footer a:hover { text-decoration: underline; }
     <div class="flow-connector"><div class="flow-dot"></div></div>
 
     <!-- 6 · IDENTITY & DATABASE -->
-    <div class="layer l-id" id="l6">
+    <div class="layer l-id collapsed" id="l6">
       <div class="layer-header" onclick="toggleLayer('l6')">
         <div class="layer-title-group">
           <div class="layer-dot" style="background:var(--id)"></div>
@@ -958,7 +981,7 @@ footer a:hover { text-decoration: underline; }
     <div class="flow-connector"><div class="flow-dot"></div></div>
 
     <!-- 7 · APPLICATION -->
-    <div class="layer l-app" id="l7">
+    <div class="layer l-app collapsed" id="l7">
       <div class="layer-header" onclick="toggleLayer('l7')">
         <div class="layer-title-group">
           <div class="layer-dot" style="background:var(--app)"></div>
@@ -998,7 +1021,7 @@ footer a:hover { text-decoration: underline; }
     <div class="flow-connector"><div class="flow-dot"></div></div>
 
     <!-- 8 · CI/CD -->
-    <div class="layer l-cicd" id="l8">
+    <div class="layer l-cicd collapsed" id="l8">
       <div class="layer-header" onclick="toggleLayer('l8')">
         <div class="layer-title-group">
           <div class="layer-dot" style="background:var(--cicd)"></div>
@@ -1068,29 +1091,8 @@ footer a:hover { text-decoration: underline; }
       </div>
     </div>
 
-    <div class="flow-connector"><div class="flow-dot"></div></div>
-
   </div><!-- /diagram -->
 
-  <!-- PHASE TIMELINE -->
-  <div class="phase-timeline">
-    <div class="pt-title">// Phase Progression</div>
-    <div class="pt-row">
-      <div class="pt-phase done"><span class="pt-num">Ph.0</span><span class="pt-label">Planning</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.1</span><span class="pt-label">DevEnv</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.2</span><span class="pt-label">Proxmox</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.3</span><span class="pt-label">VMs</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.4</span><span class="pt-label">Kubernetes</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.5</span><span class="pt-label">GitOps</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.6</span><span class="pt-label">Observability</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.7</span><span class="pt-label">Security</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.8</span><span class="pt-label">Storage</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.9</span><span class="pt-label">Identity</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.10</span><span class="pt-label">Apps + CI/CD</span></div>
-      <div class="pt-phase done"><span class="pt-num">Ph.11</span><span class="pt-label">AI / LLM</span></div>
-    </div>
-  </div>
-  
   <footer>
     <a href="https://github.com/mmrajput" target="_blank">github.com/mmrajput</a>
     &nbsp;·&nbsp;&nbsp;<a href="https://homepage.mmrajputhomelab.org" target="_blank">homepage.mmrajputhomelab.org</a>
