@@ -17,7 +17,7 @@ Foundation Kubernetes platform built with production engineering practices on a
 single Proxmox host. Covers the full platform engineering stack end-to-end.
 
 → [Project page](https://mmrajput.github.io/project-portfolio/projects/k8s-platform-foundation/)
-· [GitHub repo](https://github.com/mmrajput/kubernetes-single-cluster)
+· [GitHub repo](https://github.com/mmrajput/kubernetes-platform-foundation)
 
 ---
 
@@ -29,7 +29,7 @@ plane serving five deployment models across nine layers. Validated against the
 Sidero Talos Linux Reference Architecture 2025.
 
 → [Project page](https://mmrajput.github.io/project-portfolio/projects/k8s-platform-production/)
-· [GitHub repo](https://github.com/mmrajput/kubernetes-platform-engineering)
+· [GitHub repo](https://github.com/mmrajput/kubernetes-platform-production)
 
 ---
 
