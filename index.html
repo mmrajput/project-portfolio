@@ -1,522 +1,973 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio Projects · Mahmood Mubarak Rajput · DevOps Engineer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mahmood Mubarak Rajput — Platform Engineering</title>
 
-  :root {
-    --bg:        #0d1117;
-    --bg2:       #131b2e;
-    --bg3:       #0f1623;
-    --border:    #1e2d3d;
-    --border2:   #2a3f58;
-    --text:      #e2e8f0;
-    --text2:     #94a3b8;
-    --text3:     #64748b;
-    --accent:    #38bdf8;
-    --green:     #34d399;
-    --green-bg:  #052010;
-    --green-bd:  #0a3a20;
-    --amber:     #fbbf24;
-    --amber-bg:  #180f02;
-    --amber-bd:  #3a2504;
-    --purple:    #a78bfa;
-    --purple-bg: #0f0820;
-    --purple-bd: #281550;
-    --teal:      #2dd4bf;
-    --teal-bg:   #021412;
-    --teal-bd:   #083430;
-  }
+  <!-- Open Graph -->
+  <meta property="og:type"         content="website">
+  <meta property="og:url"          content="https://mmrajput.github.io/project-portfolio/">
+  <meta property="og:title"        content="Mahmood Mubarak Rajput — Platform Engineering">
+  <meta property="og:description"  content="Platform engineer building production-grade Kubernetes platforms on-prem and on Azure. Based in Altdorf, Baden-Württemberg, DE.">
+  <meta property="og:image"        content="https://mmrajput.github.io/project-portfolio/preview.png">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Mahmood Mubarak Rajput — Platform Engineering">
+  <meta name="twitter:description" content="Platform engineer building production-grade Kubernetes platforms on-prem and on Azure.">
+  <meta name="twitter:image"       content="https://mmrajput.github.io/project-portfolio/preview.png">
 
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    background-image: none;
-    color: var(--text);
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
-  /* ── header / hero ── */
-  header {
-    border-bottom: 1px solid var(--border);
-    padding: 36px 48px 32px;
-  }
-  .hero {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 32px;
-    flex-wrap: wrap;
-  }
-  .hero-left { display: flex; flex-direction: column; gap: 10px; }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .hero-name {
-    font-size: 26px;
-    font-weight: 600;
-    color: #e2e8f0;
-    letter-spacing: -0.03em;
-  }
-  .hero-title {
-    font-size: 14px;
-    color: var(--text2);
-    font-weight: 400;
-  }
-  .hero-title strong {
-    color: #cbd5e1;
-    font-weight: 500;
-  }
-  .hero-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 4px;
-  }
-  .hero-link {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--text3);
-    text-decoration: none;
-    border: 1px solid var(--border);
-    padding: 3px 10px;
-    border-radius: 4px;
-    background: var(--bg2);
-    transition: border-color 0.15s, color 0.15s;
-    letter-spacing: 0.02em;
-  }
-  .hero-link:hover { color: var(--accent); border-color: #2a3f58; }
+    :root {
+      --bg:          #ffffff;
+      --bg2:         #f7f7f5;
+      --bg3:         #eeeeec;
+      --ink:         #141414;
+      --ink2:        #3d3d3d;
+      --ink3:        #6b6b6b;
+      --accent:      #ff5a1f;
+      --accent-text: #c2410c;
+      --border:      #d4d4d4;
+      --border2:     #b4b4b4;
+      --grid:        rgba(0,0,0,0.045);
+      --live-ink:    #15803d;
+      --live-bg:     #f0fdf4;
+      --live-bd:     #bbf7d0;
+      --plan-ink:    #6b6b6b;
+      --plan-bg:     #f7f7f5;
+      --plan-bd:     #d4d4d4;
+      --wip-ink:     #c2410c;
+      --wip-bg:      #fff7ed;
+      --wip-bd:      #fed7aa;
+      --radius:      6px;
+    }
 
-  .hero-right {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-end;
-  }
-  .hero-meta {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--text2);
-    text-align: right;
-    line-height: 1.8;
-  }
-  .hero-badge {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    padding: 3px 10px;
-    border-radius: 4px;
-    border: 1px solid var(--green-bd);
-    background: var(--green-bg);
-    color: var(--green);
-  }
+    [data-theme="dark"] {
+      --bg:          #121212;
+      --bg2:         #1c1c1c;
+      --bg3:         #262626;
+      --ink:         #f0f0f0;
+      --ink2:        #c8c8c8;
+      --ink3:        #909090;
+      --accent:      #ff5a1f;
+      --accent-text: #ff7a4a;
+      --border:      #2e2e2e;
+      --border2:     #404040;
+      --grid:        rgba(255,255,255,0.03);
+      --live-ink:    #4ade80;
+      --live-bg:     #052e16;
+      --live-bd:     #14532d;
+      --plan-ink:    #909090;
+      --plan-bg:     #1c1c1c;
+      --plan-bd:     #2e2e2e;
+      --wip-ink:     #ff7a4a;
+      --wip-bg:      #1a0a04;
+      --wip-bd:      #431407;
+    }
 
-  /* ── main ── */
-  main {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 48px 80px;
-    flex: 1;
-    width: 100%;
-  }
+    html { scroll-behavior: smooth; }
 
-  /* ── section header ── */
-  .section-header {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #e2e8f0;
-    letter-spacing: 0.005em;
-  }
-  .section-sub {
-    font-size: 11px;
-    color: var(--text3);
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: 0.03em;
-  }
+    body {
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--ink);
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.2s, color 0.2s;
+    }
 
-  /* ── project card ── */
-  .project-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 48px;
-  }
-  .project-card {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--bg2);
-    padding: 20px 24px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    text-decoration: none;
-    transition: border-color 0.15s, background 0.15s;
-    flex-wrap: wrap;
-  }
-  .project-card:hover:not(.placeholder) {
-    border-color: var(--border2);
-    background: var(--bg3);
-    box-shadow: 0 4px 24px rgba(56,189,248,.06);
-  }
-  .project-card.placeholder {
-    opacity: 0.5;
-    border-style: dashed;
-    pointer-events: none;
-  }
-  .card-left { display: flex; flex-direction: column; gap: 7px; flex: 1; min-width: 220px; }
-  .card-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #e2e8f0;
-  }
-  .card-subtitle {
-    font-size: 11px;
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--text3);
-    letter-spacing: 0.02em;
-  }
-  .card-desc {
-    font-size: 12px;
-    color: var(--text2);
-    line-height: 1.65;
-  }
-  .card-layers {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 10px;
-  }
-  .card-layer {
-    display: flex;
-    gap: 10px;
-    align-items: baseline;
-  }
-  .layer-name {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--accent);
-    opacity: 0.9;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    min-width: 110px;
-    flex-shrink: 0;
-  }
-  .layer-tools {
-    font-size: 12px;
-    color: var(--text2);
-  }
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 2px;
-  }
-  .tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    background: var(--bg3);
-    color: var(--accent);
-    padding: 2px 8px;
-    border-radius: 3px;
-    border: 1px solid var(--border);
-    letter-spacing: 0.04em;
-  }
-  .tag.green  { background: var(--green-bg);  color: #28b870; border-color: var(--green-bd); }
-  .tag.amber  { background: var(--amber-bg);  color: #c88020; border-color: var(--amber-bd); }
-  .tag.purple { background: var(--purple-bg); color: #8060c8; border-color: var(--purple-bd); }
-  .tag.teal   { background: var(--teal-bg);   color: #14a890; border-color: var(--teal-bd); }
-  .card-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
-    flex-shrink: 0;
-  }
-  .status {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    font-weight: 500;
-    padding: 2px 8px;
-    border-radius: 3px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .status.live    { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); }
-  .status.planned { background: var(--bg3); color: var(--text3); border: 1px solid var(--border); }
-  .status.wip     { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-bd); }
-  .card-type {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--text3);
-    text-align: right;
-    line-height: 1.6;
-  }
-  .card-arrow {
-    font-size: 16px;
-    color: var(--text3);
-    transition: color 0.15s, transform 0.15s;
-  }
-  .project-card:hover:not(.placeholder) .card-arrow {
-    color: var(--accent);
-    transform: translateX(3px);
-  }
+    /* ── theme toggle ── */
+    .theme-toggle {
+      position: fixed;
+      top: 14px;
+      right: 16px;
+      z-index: 100;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 15px;
+      cursor: pointer;
+      color: var(--ink);
+      line-height: 1;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .theme-toggle:hover { border-color: var(--accent); }
+    .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  /* ── about strip ── */
-  .about-strip {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--bg2);
-    padding: 18px 24px;
-    margin-bottom: 48px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    align-items: flex-start;
-  }
-  .about-block { flex: 1; min-width: 200px; }
-  .about-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 6px;
-  }
-  .about-text {
-    font-size: 12px;
-    color: var(--text2);
-    line-height: 1.65;
-  }
-  .about-text a { color: var(--accent); text-decoration: none; }
-  .about-text a:hover { text-decoration: underline; }
+    /* ── header / hero ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 40px 48px 36px;
+      background: var(--bg);
+    }
+    .hero { max-width: 860px; margin: 0 auto; }
 
-  /* ── footer ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 20px 48px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--text2);
-  }
-  footer a { color: var(--text2); text-decoration: none; }
-  footer a:hover { color: var(--accent); }
+    .hero-name {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .hero-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--ink3);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+    .hero-open {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--accent-text);
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+    .hero-contacts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .contact-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--ink2);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 5px 14px;
+      border-radius: var(--radius);
+      background: var(--bg2);
+      transition: border-color 0.15s, color 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .contact-btn:hover { border-color: var(--accent); color: var(--accent-text); }
+    .contact-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  @media (max-width: 640px) {
-    header { padding: 24px 20px; }
-    main { padding: 28px 20px 60px; }
-    footer { padding: 16px 20px; }
-  }
-</style>
+    /* ── page tabs ── */
+    .page-tabs {
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      padding: 0 48px;
+    }
+    .page-tab-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+    }
+    .page-tab {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      color: var(--ink3);
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: none;
+      padding: 12px 20px 10px;
+      cursor: pointer;
+      margin-bottom: -1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .page-tab:hover { color: var(--ink); }
+    .page-tab.active { color: var(--accent-text); border-bottom-color: var(--accent); }
+    .page-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+    /* ── main ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 48px 80px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── story line ── */
+    .story-line {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 36px;
+      padding: 20px 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg2);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .story-step {
+      flex: 1;
+      min-width: 110px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+    }
+    .story-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+    .story-dot.live    { background: var(--live-ink); border-color: var(--live-ink); }
+    .story-dot.planned { background: transparent;     border-color: var(--plan-ink); }
+    .story-dot.wip     { background: var(--accent);   border-color: var(--accent); }
+    .story-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--ink3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .story-title  { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .story-date   { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink3); }
+    .story-arrow  { font-size: 18px; color: var(--border2); padding: 0 4px; margin-top: 20px; flex-shrink: 0; }
+
+    /* ── filter chips ── */
+    .filter-section { margin-bottom: 24px; }
+    .filter-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink3);
+      margin-bottom: 8px;
+    }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--ink3);
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent-text); }
+    .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* ── project cards ── */
+    .project-list { display: flex; flex-direction: column; gap: 12px; }
+    .project-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg2);
+      overflow: hidden;
+      transition: border-color 0.15s, opacity 0.2s;
+    }
+    .project-card.dimmed { opacity: 0.25; pointer-events: none; }
+    .project-card:focus-within { border-color: var(--border2); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 24px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .card-header:hover .card-title { color: var(--accent-text); }
+
+    .card-info { flex: 1; min-width: 0; }
+    .card-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .card-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--ink3);
+      letter-spacing: 0.08em;
+    }
+    .status {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 3px;
+      border: 1px solid;
+    }
+    .status.live    { color: var(--live-ink); background: var(--live-bg); border-color: var(--live-bd); }
+    .status.planned { color: var(--plan-ink); background: var(--plan-bg); border-color: var(--plan-bd); }
+    .status.wip     { color: var(--wip-ink);  background: var(--wip-bg);  border-color: var(--wip-bd); }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+      transition: color 0.15s;
+    }
+    .card-outcome {
+      font-size: 14px;
+      color: var(--ink2);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .card-figures { display: flex; flex-wrap: wrap; gap: 20px; }
+    .figure { display: flex; flex-direction: column; gap: 1px; }
+    .figure-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--accent-text);
+    }
+    .figure-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--ink3);
+      letter-spacing: 0.03em;
+    }
+
+    /* SVG thumbnail */
+    .card-thumb {
+      flex-shrink: 0;
+      width: 90px;
+      height: 72px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink3);
+    }
+    .card-thumb svg { width: 72px; height: 60px; }
+
+    /* expand toggle row */
+    .card-expand-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 8px 24px;
+      border: none;
+      border-top: 1px solid var(--border);
+      background: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .card-expand-btn:hover { background: var(--bg3); }
+    .card-expand-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .expand-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--ink3);
+      letter-spacing: 0.04em;
+    }
+    .expand-icon {
+      font-size: 14px;
+      color: var(--ink3);
+      transition: transform 0.2s;
+      line-height: 1;
+    }
+    .project-card.expanded .expand-icon { transform: rotate(180deg); }
+
+    /* card body */
+    .card-body {
+      display: none;
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .project-card.expanded .card-body { display: block; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .project-card.expanded .card-body {
+        animation: expandDown 0.18s ease;
+      }
+    }
+    @keyframes expandDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .layers-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink3);
+      margin-bottom: 12px;
+    }
+    .layers-list { display: flex; flex-direction: column; gap: 8px; }
+    .layer-row   { display: flex; gap: 12px; align-items: baseline; }
+    .layer-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent-text);
+      min-width: 130px;
+      flex-shrink: 0;
+      letter-spacing: 0.03em;
+    }
+    .layer-tools { font-size: 13px; color: var(--ink2); line-height: 1.5; }
+
+    .card-page-link {
+      display: inline-block;
+      margin-top: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--ink3);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .card-page-link:hover { color: var(--accent-text); }
+    .card-page-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* ── certifications ── */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .section-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--ink3);
+      letter-spacing: 0.03em;
+    }
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .cert-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg2);
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cert-issuer {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+    }
+    .cert-name  { font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+    .cert-date  { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink3); }
+    .cert-verify {
+      margin-top: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--ink3);
+      text-decoration: none;
+      transition: color 0.15s;
+      align-self: flex-start;
+    }
+    .cert-verify:hover { color: var(--accent-text); }
+    .cert-verify:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* ── footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 48px;
+      background: var(--bg);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--ink3);
+    }
+    footer a { color: var(--ink3); text-decoration: none; }
+    footer a:hover { color: var(--accent-text); }
+
+    /* ── responsive ── */
+    @media (max-width: 640px) {
+      header        { padding: 24px 20px 20px; }
+      .page-tabs    { padding: 0 20px; }
+      main          { padding: 28px 20px 60px; }
+      footer        { padding: 16px 20px; }
+      .card-thumb   { display: none; }
+      .story-arrow  { display: none; }
+      .layer-name   { min-width: 100px; }
+      .theme-toggle { top: 12px; right: 12px; }
+    }
+    @media (max-width: 360px) {
+      .hero-name   { font-size: 22px; }
+      .contact-btn { font-size: 11px; padding: 4px 10px; }
+    }
+  </style>
 </head>
 <body>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Switch colour theme">&#9728;</button>
 
 <!-- ── HERO ── -->
 <header>
   <div class="hero">
-    <div class="hero-left">
-      <div class="hero-name">Mahmood Mubarak Rajput</div>
-      <div class="hero-title">
-        <strong>DevOps Engineer</strong> &nbsp;·&nbsp;
-        Altdorf, Baden-Württemberg, DE
-      </div>
-    </div>
-    <div class="hero-right">
-      <span class="hero-badge">open to opportunities</span>
-      <div class="hero-meta">
-        Kubernetes · GitOps <br> Azure · AWS · IaC
-      </div>
+    <h1 class="hero-name">Mahmood Mubarak Rajput</h1>
+    <p class="hero-title">Platform Engineer &nbsp;·&nbsp; Altdorf, Baden-Württemberg, DE</p>
+    <p class="hero-open">Open to platform engineering roles in Germany (on-prem / cloud Kubernetes)</p>
+    <div class="hero-contacts">
+      <a href="https://www.linkedin.com/in/mahmood-rajput/" class="contact-btn" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="mailto:mahmoodrajput.cloud@gmail.com" class="contact-btn">Email</a>
+      <a href="./Lebenslauf_Mahmood_Rajput_DevOps_Engineer.pdf" class="contact-btn" download>CV (PDF)</a>
     </div>
   </div>
 </header>
 
+<!-- ── PAGE TABS ── -->
+<nav class="page-tabs" aria-label="Site sections">
+  <div class="page-tab-wrap">
+    <button class="page-tab active" data-tab="projects" aria-selected="true">Projects</button>
+    <button class="page-tab"        data-tab="certifications" aria-selected="false">Certifications</button>
+  </div>
+</nav>
+
 <main>
 
-  <!-- ── ABOUT ── -->
-  <div class="about-strip">
-    <div class="about-block">
-      <div class="about-label">Tech focus</div>
-      <div class="about-text">
-        Kubernetes Platform Engineering · Talos Linux · CAPI · GitOps · 
-        Infrastructure-as-Code · Observability · Secrets Management · 
-        Identity Federation · Security Hardening · Cloud (AWS · Azure) · 
-        BSI IT-Grundschutz · IEC 62443 · DSGVO / Schrems II
+  <!-- ══════════════════════════════════════
+       PROJECTS TAB
+  ══════════════════════════════════════ -->
+  <div id="tab-projects" class="tab-panel active" role="tabpanel" aria-label="Projects">
+
+    <!-- Story line -->
+    <div class="story-line" aria-label="Project progression">
+      <div class="story-step">
+        <div class="story-dot live" aria-hidden="true"></div>
+        <div class="story-label">Project 01</div>
+        <div class="story-title">On-prem Foundation</div>
+        <div class="story-date">Jan – Apr 2026</div>
+      </div>
+      <div class="story-arrow" aria-hidden="true">&#8594;</div>
+      <div class="story-step">
+        <div class="story-dot planned" aria-hidden="true"></div>
+        <div class="story-label">Project 02</div>
+        <div class="story-title">On-prem Production</div>
+        <div class="story-date">May 2026 – present</div>
+      </div>
+      <div class="story-arrow" aria-hidden="true">&#8594;</div>
+      <div class="story-step">
+        <div class="story-dot wip" aria-hidden="true"></div>
+        <div class="story-label">Project 03</div>
+        <div class="story-title">Azure Landing Zone</div>
+        <div class="story-date">2026</div>
       </div>
     </div>
-  </div>
 
-  <!-- ══════════════════════════════════════
-       SECTION 1 — PROJECTS
-  ══════════════════════════════════════ -->
-  <div class="section-header">
-    <span class="section-title">Projects</span>
-    <span class="section-sub">self-initiated · platform engineering</span>
-  </div>
+    <!-- Skill filter -->
+    <div class="filter-section">
+      <div class="filter-label">Filter by skill</div>
+      <div class="filter-chips" role="group" aria-label="Skill filter">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="kubernetes">Kubernetes</button>
+        <button class="chip" data-filter="azure">Azure</button>
+        <button class="chip" data-filter="gitops">GitOps</button>
+        <button class="chip" data-filter="security">Security</button>
+        <button class="chip" data-filter="observability">Observability</button>
+        <button class="chip" data-filter="data">Data</button>
+        <button class="chip" data-filter="compliance">Compliance</button>
+      </div>
+    </div>
 
-  <div class="project-list">
+    <!-- Project cards -->
+    <div class="project-list">
 
-    <!-- Kubernetes Platform Engineering - Foundation -->
-    <a class="project-card" href="./projects/k8s-platform-foundation/" target="_blank" rel="noopener noreferrer">
-      <div class="card-left">
-        <div class="card-title">Kubernetes Platform Engineering – Foundation</div>
-        <div class="card-subtitle">Project 01  ·  Jan – Apr 2026 <br> Proxmox VE · 3-node cluster · Phases 0–10 complete</div>
-      <div class="card-desc">
-        A foundation Kubernetes platform built with production engineering practices —
-        running on a single Proxmox host (32 GB RAM, 500 GB SSD) with a 3-node kubeadm cluster. The platform covers the full engineering stack:
-        <div class="card-layers">
-          <div class="card-layer">
-            <span class="layer-name">GitOps</span>
-            <span class="layer-tools">ArgoCD App-of-Apps · crane + Trivy image promotion pipeline</span>
+      <!-- ── CARD 01 ── -->
+      <article class="project-card" data-skills="kubernetes gitops security observability data">
+
+        <div class="card-header" onclick="toggleCard(this.closest('.project-card'))">
+          <div class="card-info">
+            <div class="card-meta-row">
+              <span class="card-num">PROJECT 01</span>
+              <span class="status live">Live</span>
+              <span class="card-num">Jan – Apr 2026</span>
+            </div>
+            <div class="card-title">Kubernetes Platform Engineering – Foundation</div>
+            <div class="card-outcome">Full-stack platform on a single Proxmox host, phases 0–10 complete</div>
+            <div class="card-figures">
+              <div class="figure">
+                <span class="figure-value">3</span>
+                <span class="figure-label">kubeadm nodes</span>
+              </div>
+              <div class="figure">
+                <span class="figure-value">7</span>
+                <span class="figure-label">platform layers</span>
+              </div>
+              <div class="figure">
+                <span class="figure-value">10</span>
+                <span class="figure-label">phases complete</span>
+              </div>
+              <div class="figure">
+                <span class="figure-value">Proxmox</span>
+                <span class="figure-label">hypervisor</span>
+              </div>
+            </div>
           </div>
-          <div class="card-layer">
-            <span class="layer-name">Observability</span>
-            <span class="layer-tools">Prometheus · Grafana · Loki · Promtail</span>
-          </div>
-          <div class="card-layer">
-            <span class="layer-name">Security</span>
-            <span class="layer-tools">Vault + ESO · Falco · NetworkPolicy · cert-manager</span>
-          </div>
-          <div class="card-layer">
-            <span class="layer-name">Identity</span>
-            <span class="layer-tools">Keycloak SSO</span>
-          </div>
-          <div class="card-layer">
-            <span class="layer-name">Networking</span>
-            <span class="layer-tools">Cloudflare Tunnel · nginx-ingress · Calico CNI</span>
-          </div>
-          <div class="card-layer">
-            <span class="layer-name">Storage & Backup</span>
-            <span class="layer-tools">CloudNativePG · WAL archiving · PITR · Longhorn · MinIO · Velero · rclone</span>
-          </div>
-          <div class="card-layer">
-            <span class="layer-name">Workload</span>
-            <span class="layer-tools">Nextcloud · Redis · Homepage</span>
+          <div class="card-thumb" aria-hidden="true">
+            <svg viewBox="0 0 72 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="22" y="2" width="28" height="14" rx="1" stroke="currentColor" stroke-width="1"/>
+              <text x="36" y="12" text-anchor="middle" font-size="5" fill="currentColor" font-family="monospace">CP</text>
+              <rect x="2" y="38" width="28" height="16" rx="1" stroke="currentColor" stroke-width="1"/>
+              <text x="16" y="48" text-anchor="middle" font-size="5" fill="currentColor" font-family="monospace">W1</text>
+              <rect x="42" y="38" width="28" height="16" rx="1" stroke="currentColor" stroke-width="1"/>
+              <text x="56" y="48" text-anchor="middle" font-size="5" fill="currentColor" font-family="monospace">W2</text>
+              <rect x="2" y="2" width="16" height="10" rx="1" stroke="#ff5a1f" stroke-width="1"/>
+              <text x="10" y="9" text-anchor="middle" font-size="4" fill="#ff5a1f" font-family="monospace">Argo</text>
+              <line x1="30" y1="16" x2="16" y2="38" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <line x1="42" y1="16" x2="56" y2="38" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <line x1="36" y1="16" x2="36" y2="34" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <line x1="18" y1="7" x2="22" y2="7" stroke="#ff5a1f" stroke-width="0.75"/>
+            </svg>
           </div>
         </div>
-      </div>
-        <div class="card-tags">
-          <span class="tag">kubeadm v1.31</span>
-          <span class="tag">ArgoCD</span>
-          <span class="tag">Keycloak</span>
-          <span class="tag">Vault + ESO</span>
-          <span class="tag">CloudNativePG</span>
-          <span class="tag">Falco</span>
-        </div>
-      </div>
-      <div class="card-right">
-        <span class="status live">live</span>
-        <span class="card-arrow">→</span>
-      </div>
-    </a>
 
-    <!-- Kubernetes Platform Engineering - Production -->
-    <a class="project-card" href="./projects/k8s-platform-production/" target="_blank" rel="noopener noreferrer">
-      <div class="card-left">
-        <div class="card-title">Kubernetes Platform Engineering – Production</div>
-        <div class="card-subtitle">Project 02  ·  May 2026 – present <br> Talos Linux · CAPI · ArgoCD GitOps · Proxmox VE · Nine Layers · Five Deployment Models</div>
-        <div class="card-desc">
-          A production-grade Kubernetes platform built on an infrastructure-agnostic architecture —
-          the same platform runs on Proxmox, VMware, bare-metal PXE, or any cloud VM without changing
-          a single layer above the hypervisor. One management plane serves all five deployment models:
-          vCluster IDP, mission-critical dedicated clusters, large microservices based platforms, KubeEdge factory sites, and KubeVirt VM migration.
-          Validated against the Sidero Talos Linux Reference Architecture 2025.
-          <div class="card-layers">
-            <div class="card-layer">
+        <button class="card-expand-btn" onclick="toggleCard(this.closest('.project-card'))" aria-expanded="false">
+          <span class="expand-label">Stack details</span>
+          <span class="expand-icon" aria-hidden="true">&#9662;</span>
+        </button>
+
+        <div class="card-body">
+          <div class="layers-title">Platform Layers</div>
+          <div class="layers-list">
+            <div class="layer-row">
+              <span class="layer-name">GitOps</span>
+              <span class="layer-tools">ArgoCD App-of-Apps · crane + Trivy image promotion pipeline</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Observability</span>
+              <span class="layer-tools">Prometheus · Grafana · Loki · Promtail</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Security</span>
+              <span class="layer-tools">Vault + ESO · Falco · NetworkPolicy · cert-manager</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Identity</span>
+              <span class="layer-tools">Keycloak SSO</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Networking</span>
+              <span class="layer-tools">Cloudflare Tunnel · nginx-ingress · Calico CNI</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Storage &amp; Backup</span>
+              <span class="layer-tools">CloudNativePG · WAL archiving · PITR · Longhorn · MinIO · Velero · rclone</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Workload</span>
+              <span class="layer-tools">Nextcloud · Redis · Homepage</span>
+            </div>
+          </div>
+          <a href="./projects/k8s-platform-foundation/" class="card-page-link" target="_blank" rel="noopener noreferrer">View full project page &#8594;</a>
+        </div>
+
+      </article>
+
+      <!-- ── CARD 02 ── -->
+      <article class="project-card" data-skills="kubernetes gitops security observability compliance data">
+
+        <div class="card-header" onclick="toggleCard(this.closest('.project-card'))">
+          <div class="card-info">
+            <div class="card-meta-row">
+              <span class="card-num">PROJECT 02</span>
+              <span class="status planned">Planned</span>
+              <span class="card-num">May 2026 – present</span>
+            </div>
+            <div class="card-title">Kubernetes Platform Engineering – Production</div>
+            <div class="card-outcome">Infrastructure-agnostic platform serving 5 deployment models across 9 layers</div>
+            <div class="card-figures">
+              <div class="figure">
+                <span class="figure-value">9</span>
+                <span class="figure-label">node layout</span>
+              </div>
+              <div class="figure">
+                <span class="figure-value">5</span>
+                <span class="figure-label">deployment models</span>
+              </div>
+              <div class="figure">
+                <span class="figure-value">9</span>
+                <span class="figure-label">platform layers</span>
+              </div>
+              <div class="figure">
+                <span class="figure-value">Talos</span>
+                <span class="figure-label">Linux / CAPI</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-thumb" aria-hidden="true">
+            <svg viewBox="0 0 72 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="68" height="14" rx="1" stroke="currentColor" stroke-width="1"/>
+              <text x="36" y="12" text-anchor="middle" font-size="4.5" fill="currentColor" font-family="monospace">Management Plane</text>
+              <rect x="2" y="34" width="18" height="22" rx="1" stroke="currentColor" stroke-width="1"/>
+              <text x="11" y="47" text-anchor="middle" font-size="4" fill="currentColor" font-family="monospace">vCluster</text>
+              <rect x="27" y="34" width="18" height="22" rx="1" stroke="currentColor" stroke-width="1"/>
+              <text x="36" y="46" text-anchor="middle" font-size="4" fill="currentColor" font-family="monospace">Mission</text>
+              <text x="36" y="52" text-anchor="middle" font-size="4" fill="currentColor" font-family="monospace">Critical</text>
+              <rect x="52" y="34" width="18" height="22" rx="1" stroke="currentColor" stroke-width="1"/>
+              <text x="61" y="47" text-anchor="middle" font-size="4" fill="currentColor" font-family="monospace">Edge</text>
+              <line x1="11" y1="16" x2="11" y2="34" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <line x1="36" y1="16" x2="36" y2="34" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <line x1="61" y1="16" x2="61" y2="34" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <text x="4" y="27" font-size="4" fill="#ff5a1f" font-family="monospace">CAPI</text>
+            </svg>
+          </div>
+        </div>
+
+        <button class="card-expand-btn" onclick="toggleCard(this.closest('.project-card'))" aria-expanded="false">
+          <span class="expand-label">Stack details</span>
+          <span class="expand-icon" aria-hidden="true">&#9662;</span>
+        </button>
+
+        <div class="card-body">
+          <div class="layers-title">Platform Layers</div>
+          <div class="layers-list">
+            <div class="layer-row">
               <span class="layer-name">Infrastructure</span>
               <span class="layer-tools">Talos Linux · CAPI · Proxmox VE · factory.talos.dev extensions · 9-node production layout</span>
             </div>
-            <div class="card-layer">
+            <div class="layer-row">
               <span class="layer-name">High Availability</span>
               <span class="layer-tools">etcd quorum · kube-vip · MetalLB · KubePrism · PodDisruptionBudgets · ExternalDNS</span>
             </div>
-            <div class="card-layer">
+            <div class="layer-row">
               <span class="layer-name">GitOps</span>
               <span class="layer-tools">GitLab CE · ArgoCD App-of-Apps · ApplicationSet · Reloader · Git = only interface</span>
             </div>
-            <div class="card-layer">
+            <div class="layer-row">
               <span class="layer-name">Storage</span>
               <span class="layer-tools">Rook-Ceph (RBD · CephFS · RadosGW) · MinIO · Velero · CNPG WAL · offsite rclone</span>
             </div>
-            <div class="card-layer">
-              <span class="layer-name">Secrets & Identity</span>
+            <div class="layer-row">
+              <span class="layer-name">Secrets &amp; Identity</span>
               <span class="layer-tools">Vault HA Raft · ESO ClusterSecretStore · Keycloak OIDC · cert-manager · Talos CCM</span>
             </div>
-            <div class="card-layer">
+            <div class="layer-row">
               <span class="layer-name">Observability</span>
               <span class="layer-tools">OTel Collector · Prometheus / VictoriaMetrics · Loki · Grafana · Hubble · Alertmanager</span>
             </div>
-            <div class="card-layer">
+            <div class="layer-row">
               <span class="layer-name">Security</span>
               <span class="layer-tools">Kyverno · Harbor · Falco · CiliumNetworkPolicy · Headscale WireGuard · kube-bench · Kubescape · Gitleaks</span>
             </div>
-            <div class="card-layer">
+            <div class="layer-row">
               <span class="layer-name">CI/CD</span>
               <span class="layer-tools">GitLab Runner · Trivy CVE gate · Cosign image signing · Renovate · Karmada</span>
             </div>
-            <div class="card-layer">
+            <div class="layer-row">
               <span class="layer-name">Deployment Models</span>
               <span class="layer-tools">vCluster IDP · Mission Critical (IEC 62443) · Large Microservices · KubeEdge · KubeVirt</span>
             </div>
           </div>
+          <a href="./projects/k8s-platform-production/" class="card-page-link" target="_blank" rel="noopener noreferrer">View full project page &#8594;</a>
         </div>
-        <div class="card-tags">
-          <span class="tag">Talos Linux</span>
-          <span class="tag">CAPI</span>
-          <span class="tag">ArgoCD GitOps</span>
-          <span class="tag">Cilium eBPF</span>
-          <span class="tag">Rook-Ceph</span>
-          <span class="tag">Vault HA</span>
-          <span class="tag">Keycloak</span>
-          <span class="tag">Kyverno</span>
-          <span class="tag">Harbor</span>
-          <span class="tag">BSI IT-Grundschutz</span>
-          <span class="tag">IEC 62443</span>
-          <span class="tag">Five Deployment Models</span>
-        </div>
-      </div>
-      <div class="card-right">
-        <span class="status planned">Planned</span>
-        <span class="status planned">POST-CKA</span>
-        <span class="card-arrow">→</span>
-      </div>
-    </a>
 
+      </article>
+
+      <!-- ── CARD 03 ── -->
+      <article class="project-card" data-skills="kubernetes azure gitops security compliance data">
+
+        <div class="card-header" onclick="toggleCard(this.closest('.project-card'))">
+          <div class="card-info">
+            <div class="card-meta-row">
+              <span class="card-num">PROJECT 03</span>
+              <span class="status wip">Design complete · build in progress</span>
+              <span class="card-num">2026</span>
+            </div>
+            <div class="card-title">Azure Platform Engineering: AKS Landing Zone</div>
+            <div class="card-outcome">Hub-and-spoke landing zone on Azure with Terraform/Terragrunt, private AKS, Cilium, and enterprise governance</div>
+            <div class="card-figures">
+              <div class="figure">
+                <span class="figure-value">€1.27/hr</span>
+                <span class="figure-label">Demo (on demand)</span>
+              </div>
+              <div class="figure">
+                <span class="figure-value">€4,900/mo</span>
+                <span class="figure-label">Enterprise (24/7)</span>
+              </div>
+              <div class="figure">
+                <span class="figure-value">Hub-spoke</span>
+                <span class="figure-label">landing zone</span>
+              </div>
+              <div class="figure">
+                <span class="figure-value">Terraform</span>
+                <span class="figure-label">+ Terragrunt</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-thumb" aria-hidden="true">
+            <svg viewBox="0 0 72 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="22" y="2" width="28" height="16" rx="1" stroke="#ff5a1f" stroke-width="1"/>
+              <text x="36" y="8" text-anchor="middle" font-size="4" fill="#ff5a1f" font-family="monospace">Hub</text>
+              <text x="36" y="14" text-anchor="middle" font-size="4" fill="#ff5a1f" font-family="monospace">VNet</text>
+              <rect x="2" y="40" width="22" height="16" rx="1" stroke="currentColor" stroke-width="1"/>
+              <text x="13" y="49" text-anchor="middle" font-size="4.5" fill="currentColor" font-family="monospace">AKS</text>
+              <text x="13" y="54" text-anchor="middle" font-size="4" fill="currentColor" font-family="monospace">Spoke</text>
+              <rect x="48" y="40" width="22" height="16" rx="1" stroke="currentColor" stroke-width="1"/>
+              <text x="59" y="49" text-anchor="middle" font-size="4.5" fill="currentColor" font-family="monospace">Work</text>
+              <text x="59" y="54" text-anchor="middle" font-size="4" fill="currentColor" font-family="monospace">Spoke</text>
+              <line x1="30" y1="18" x2="13" y2="40" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <line x1="42" y1="18" x2="59" y2="40" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <text x="31" y="32" text-anchor="middle" font-size="4" fill="currentColor" font-family="monospace">Policy</text>
+            </svg>
+          </div>
+        </div>
+
+        <button class="card-expand-btn" onclick="toggleCard(this.closest('.project-card'))" aria-expanded="false">
+          <span class="expand-label">Stack details</span>
+          <span class="expand-icon" aria-hidden="true">&#9662;</span>
+        </button>
+
+        <div class="card-body">
+          <div class="layers-title">Platform Layers</div>
+          <div class="layers-list">
+            <div class="layer-row">
+              <span class="layer-name">IaC</span>
+              <span class="layer-tools">Terraform · Terragrunt · hub-and-spoke landing zone</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Networking</span>
+              <span class="layer-tools">Application Gateway for Containers · PostgreSQL behind private endpoints</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">AKS</span>
+              <span class="layer-tools">Private AKS · Cilium CNI</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">GitOps</span>
+              <span class="layer-tools">ArgoCD</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Security</span>
+              <span class="layer-tools">Keyless Cosign signing · Kyverno policy enforcement</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Governance</span>
+              <span class="layer-tools">Azure Policy · PIM · Workload Identity · components tagged Demo or Enterprise</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Cost</span>
+              <span class="layer-tools">€1.27/hr Demo (on demand) · ~€4,900/mo Enterprise (24/7)</span>
+            </div>
+            <div class="layer-row">
+              <span class="layer-name">Delivery</span>
+              <span class="layer-tools">Azure DevOps Boards · Claude Code via MCP · GitHub Actions · human-approved merges</span>
+            </div>
+          </div>
+          <span style="display:inline-block;margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3);">Project page coming soon</span>
+        </div>
+
+      </article>
+
+    </div><!-- .project-list -->
+  </div><!-- #tab-projects -->
+
+  <!-- ══════════════════════════════════════
+       CERTIFICATIONS TAB
+  ══════════════════════════════════════ -->
+  <div id="tab-certifications" class="tab-panel" role="tabpanel" aria-label="Certifications">
+    <div class="section-header">
+      <span class="section-title">Certifications</span>
+      <span class="section-sub">verified credentials</span>
+    </div>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <div class="cert-issuer">Microsoft</div>
+        <div class="cert-name">AZ-104: Azure Administrator Associate</div>
+        <div class="cert-date">November 2024</div>
+        <a href="https://learn.microsoft.com/en-us/users/mahmoodmubarakrajput-7310/credentials/56dffa7b6a3af0c"
+           class="cert-verify" target="_blank" rel="noopener noreferrer">Verify credential &#8594;</a>
+      </div>
+    </div>
   </div>
-
 
 </main>
 
 <footer>
-  <span>Mahmood Mubarak Rajput · DevOps Engineer · Altdorf, Baden-Württemberg, DE</span>
-  <span><a href="https://github.com/mmrajput/project-portfolio">github.com/mmrajput/project-portfolio</a></span>
+  <span>Mahmood Mubarak Rajput &nbsp;·&nbsp; Platform Engineer &nbsp;·&nbsp; Altdorf, Baden-Württemberg, DE</span>
+  <span>
+    <a href="https://www.linkedin.com/in/mahmood-rajput/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    &nbsp;·&nbsp;
+    <a href="mailto:mahmoodrajput.cloud@gmail.com">mahmoodrajput.cloud@gmail.com</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/mmrajput/project-portfolio">github.com/mmrajput/project-portfolio</a>
+  </span>
 </footer>
+
+<script>
+  // ── theme toggle ──
+  const html   = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  setTheme(localStorage.getItem('theme') || 'light');
+
+  toggle.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+  function setTheme(t) {
+    html.dataset.theme    = t;
+    toggle.textContent    = t === 'dark' ? '☽' : '☀';
+    toggle.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    localStorage.setItem('theme', t);
+  }
+
+  // ── tab switching ──
+  document.querySelectorAll('.page-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.page-tab').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ── skill filter ──
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const f = chip.dataset.filter;
+      document.querySelectorAll('.project-card').forEach(card => {
+        const match = f === 'all' || card.dataset.skills.split(' ').includes(f);
+        card.classList.toggle('dimmed', !match);
+      });
+    });
+  });
+
+  // ── card expand / collapse ──
+  function toggleCard(card) {
+    const expanded = card.classList.toggle('expanded');
+    const btn = card.querySelector('.card-expand-btn');
+    if (btn) btn.setAttribute('aria-expanded', expanded);
+  }
+</script>
 
 </body>
 </html>
